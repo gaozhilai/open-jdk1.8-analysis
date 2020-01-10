@@ -285,7 +285,7 @@ import sun.misc.Unsafe;
  *
  * @since 1.5
  * @author Doug Lea
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/1/10 17:27
 public abstract class AbstractQueuedSynchronizer
     extends AbstractOwnableSynchronizer
     implements java.io.Serializable {
@@ -581,14 +581,14 @@ public abstract class AbstractQueuedSynchronizer
      * @return node's predecessor
      */
     private Node enq(final Node node) {
-        for (;;) {
+        for (;;) { // 自旋等待节点入队, 通过cas保证并发情况下node安全正确入队
             Node t = tail;
-            if (t == null) { // Must initialize
+            if (t == null) { // Must initialize. head为空时构造dummy node初始化head和tail
                 if (compareAndSetHead(new Node()))
                     tail = head;
             } else {
                 node.prev = t;
-                if (compareAndSetTail(t, node)) {
+                if (compareAndSetTail(t, node)) { // 如果cas设置tail失败了(比如tail被其他等待节点抢占), 也不会死循环, 下个循环取到了最新的tail, 继续尝试设置.
                     t.next = node;
                     return t;
                 }
@@ -748,13 +748,13 @@ public abstract class AbstractQueuedSynchronizer
 
         // Skip cancelled predecessors
         Node pred = node.prev;
-        while (pred.waitStatus > 0)
+        while (pred.waitStatus > 0) // 忽略队列锁中当前要取消的node前方已经处于取消状态的node
             node.prev = pred = pred.prev;
 
         // predNext is the apparent node to unsplice. CASes below will
         // fail if not, in which case, we lost race vs another cancel
         // or signal, so no further action is necessary.
-        Node predNext = pred.next;
+        Node predNext = pred.next; // 取出pred当前的next节点, 用于下面cas更新next
 
         // Can use unconditional write instead of CAS here.
         // After this atomic step, other Nodes can skip past us.
@@ -762,21 +762,21 @@ public abstract class AbstractQueuedSynchronizer
         node.waitStatus = Node.CANCELLED;
 
         // If we are the tail, remove ourselves.
-        if (node == tail && compareAndSetTail(node, pred)) {
+        if (node == tail && compareAndSetTail(node, pred)) { // 如果要取消节点是tail, 那么直接删除要取消的node
             compareAndSetNext(pred, predNext, null);
         } else {
             // If successor needs signal, try to set pred's next-link
             // so it will get one. Otherwise wake it up to propagate.
             int ws;
-            if (pred != head &&
-                ((ws = pred.waitStatus) == Node.SIGNAL ||
-                 (ws <= 0 && compareAndSetWaitStatus(pred, ws, Node.SIGNAL))) &&
-                pred.thread != null) {
+            if (pred != head && // 要取消的node不是队列锁第二个节点, 不能直接唤醒后继节点
+                ((ws = pred.waitStatus) == Node.SIGNAL || // pred本身是SIGNAL状态
+                 (ws <= 0 && compareAndSetWaitStatus(pred, ws, Node.SIGNAL))) && // pred状态为负值, 即非CANCEL状态, 尝试设置成SIGNAL状态
+                pred.thread != null) { // 将pred的next设置为当前要取消node的后继节点, 完成当前node的删除(pred获取到同步状态并释放后由于本身是SIGNAL状态, 所以自然会唤醒当前node的后继节点)
                 Node next = node.next;
                 if (next != null && next.waitStatus <= 0)
                     compareAndSetNext(pred, predNext, next);
             } else {
-                unparkSuccessor(node);
+                unparkSuccessor(node); // 如果要取消的node是队列锁第二个节点, 那么直接唤醒当前取消node的后继节点
             }
 
             node.next = node; // help GC
@@ -858,7 +858,7 @@ public abstract class AbstractQueuedSynchronizer
         boolean failed = true;
         try {
             boolean interrupted = false;
-            for (;;) {
+            for (;;) { // 自旋
                 final Node p = node.predecessor();
                 if (p == head && tryAcquire(arg)) {
                     setHead(node);
