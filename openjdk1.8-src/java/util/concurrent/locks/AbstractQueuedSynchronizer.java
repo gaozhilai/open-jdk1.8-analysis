@@ -1195,8 +1195,8 @@ public abstract class AbstractQueuedSynchronizer
      *        can represent anything you like.
      */
     public final void acquire(int arg) {
-        if (!tryAcquire(arg) &&
-            acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+        if (!tryAcquire(arg) && // 此处的tryAcquire是子类中的实现方法, 具体公平非公平实现类逻辑决定
+            acquireQueued(addWaiter(Node.EXCLUSIVE), arg)) // 获取失败, 线程包装成节点进行排队等待
             selfInterrupt();
     }
 
@@ -1238,7 +1238,7 @@ public abstract class AbstractQueuedSynchronizer
      * @param nanosTimeout the maximum number of nanoseconds to wait
      * @return {@code true} if acquired; {@code false} if timed out
      * @throws InterruptedException if the current thread is interrupted
-     */
+     */ // 有时间限制的获取同步状态, 超时返回false
     public final boolean tryAcquireNanos(int arg, long nanosTimeout)
             throws InterruptedException {
         if (Thread.interrupted())
@@ -1256,7 +1256,7 @@ public abstract class AbstractQueuedSynchronizer
      *        {@link #tryRelease} but is otherwise uninterpreted and
      *        can represent anything you like.
      * @return the value returned from {@link #tryRelease}
-     */
+     */ // 释放同步状态, 如果有必要的话会唤醒当前node的后继节点
     public final boolean release(int arg) {
         if (tryRelease(arg)) {
             Node h = head;
