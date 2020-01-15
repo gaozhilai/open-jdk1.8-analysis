@@ -36,6 +36,8 @@
 package java.util.concurrent.locks;
 import sun.misc.Unsafe;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Basic thread blocking primitives for creating locks and other
  * synchronization classes.
@@ -116,10 +118,10 @@ import sun.misc.Unsafe;
  *     LockSupport.unpark(waiters.peek());
  *   }
  * }}</pre>
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/1/15 17:11
 public class LockSupport {
     private LockSupport() {} // Cannot be instantiated.
-
+    // 将blocker对象设置到指定线程对象, 用于在线程堆栈信息中追踪线程阻塞的信息
     private static void setBlocker(Thread t, Object arg) {
         // Even though volatile, hotspot doesn't need a write barrier here.
         UNSAFE.putObject(t, parkBlockerOffset, arg);
@@ -135,7 +137,7 @@ public class LockSupport {
      *
      * @param thread the thread to unpark, or {@code null}, in which case
      *        this operation has no effect
-     */
+     */ // 如果参数线程处于park阻塞状态, 那么唤醒线程. 如果处于非阻塞状态那么下一次调用park也不会阻塞
     public static void unpark(Thread thread) {
         if (thread != null)
             UNSAFE.unpark(thread);
@@ -168,7 +170,7 @@ public class LockSupport {
      * @param blocker the synchronization object responsible for this
      *        thread parking
      * @since 1.6
-     */
+     */ /** 阻塞当前线程, blocker在线程dump信息中提供导致线程阻塞的对象信息, 优先使用此方法而不是{@link #park()} */
     public static void park(Object blocker) {
         Thread t = Thread.currentThread();
         setBlocker(t, blocker);
@@ -207,7 +209,7 @@ public class LockSupport {
      *        thread parking
      * @param nanos the maximum number of nanoseconds to wait
      * @since 1.6
-     */
+     */ /** 最多阻塞当前线程指定时长, blocker在线程dump信息中提供导致线程阻塞的对象信息, 优先使用此方法而不是{@link #parkNanos(long)} */
     public static void parkNanos(Object blocker, long nanos) {
         if (nanos > 0) {
             Thread t = Thread.currentThread();
@@ -249,7 +251,7 @@ public class LockSupport {
      * @param deadline the absolute time, in milliseconds from the Epoch,
      *        to wait until
      * @since 1.6
-     */
+     */ /** 最多阻塞当前线程直到指定时刻, blocker在线程dump信息中提供导致线程阻塞的对象信息, 优先使用此方法而不是{@link #parkUntil(long)} */
     public static void parkUntil(Object blocker, long deadline) {
         Thread t = Thread.currentThread();
         setBlocker(t, blocker);
@@ -268,7 +270,7 @@ public class LockSupport {
      * @return the blocker
      * @throws NullPointerException if argument is null
      * @since 1.6
-     */
+     */ // 从指定线程对象获取blocker对象, 用于在线程堆栈信息中追踪线程阻塞的信息, 这里获取的blocker对象只是一个时刻的快照, 获取后可能已经被改变
     public static Object getBlocker(Thread t) {
         if (t == null)
             throw new NullPointerException();
@@ -299,7 +301,7 @@ public class LockSupport {
      * method to return. Callers should re-check the conditions which caused
      * the thread to park in the first place. Callers may also determine,
      * for example, the interrupt status of the thread upon return.
-     */
+     */ /** 阻塞当前线程, 优先使用{@link #park(Object)}而不是此方法 */
     public static void park() {
         UNSAFE.park(false, 0L);
     }
@@ -332,7 +334,7 @@ public class LockSupport {
      * upon return.
      *
      * @param nanos the maximum number of nanoseconds to wait
-     */
+     */ /** 最多阻塞当前线程指定时长, 优先使用{@link #parkNanos(Object, long)}而不是此方法 */
     public static void parkNanos(long nanos) {
         if (nanos > 0)
             UNSAFE.park(false, nanos);
@@ -367,7 +369,7 @@ public class LockSupport {
      *
      * @param deadline the absolute time, in milliseconds from the Epoch,
      *        to wait until
-     */
+     */ /** 最多阻塞当前线程直到指定时刻, 优先使用{@link #parkUntil(Object, long)}而不是此方法 */
     public static void parkUntil(long deadline) {
         UNSAFE.park(true, deadline);
     }
@@ -375,7 +377,7 @@ public class LockSupport {
     /**
      * Returns the pseudo-randomly initialized or updated secondary seed.
      * Copied from ThreadLocalRandom due to package access restrictions.
-     */
+     */ /** 返回位随机数给{@link StampedLock}使用, 代码与{@link ThreadLocalRandom}中一致, 因为LockSupport与ThreadLocalRandom不在同一包, 所以要把代码复制过来 */
     static final int nextSecondarySeed() {
         int r;
         Thread t = Thread.currentThread();

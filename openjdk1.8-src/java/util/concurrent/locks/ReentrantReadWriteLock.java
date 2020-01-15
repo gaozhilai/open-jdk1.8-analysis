@@ -395,7 +395,7 @@ public class ReentrantReadWriteLock
             if (c != 0) { // 如果同步状态不为0, 即存在读锁或者写锁
                 // (Note: if c != 0 and w == 0 then shared count != 0)
                 if (w == 0 || current != getExclusiveOwnerThread()) // 写状态为0, 即存在读状态, 存在读锁获取写锁失败. 或者存在写锁但是不是当前线程持有, 同样获取失败
-                    return false;
+                    return false; // 只要存在读锁, 写锁就会获取失败, 也就是不支持锁升级(不允许一个线程持有读锁, 获取写锁, 再释放读锁)
                 if (w + exclusiveCount(acquires) > MAX_COUNT) // 上方if没有返回false证明存在写状态, 且被当前线程持有, 检查重入是否超过最大数量
                     throw new Error("Maximum lock count exceeded");
                 // Reentrant acquire
@@ -463,8 +463,8 @@ public class ReentrantReadWriteLock
              */
             Thread current = Thread.currentThread();
             int c = getState();
-            if (exclusiveCount(c) != 0 &&
-                getExclusiveOwnerThread() != current) // 存在写同步状态, 并且写同步状态不是被当前线程持有
+            if (exclusiveCount(c) != 0 && // 存在写同步状态
+                getExclusiveOwnerThread() != current) // 并且写同步状态不是被当前线程持有 (允许同一个线程持有写锁, 获取读锁, 再释放写锁, 即锁降级)
                 return -1; // 返回获取失败
             int r = sharedCount(c); // 获取读同步状态持有数量
             if (!readerShouldBlock() && // 公平模式下同步队列不存在前驱节点, 非公平模式下同步队列第二个不是等待获取写同步状态的节点
