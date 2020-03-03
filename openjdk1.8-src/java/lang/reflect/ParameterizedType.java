@@ -43,8 +43,8 @@ package java.lang.reflect;
  * same generic type declaration and have equal type parameters.
  *
  * @since 1.5
- */
-public interface ParameterizedType extends Type {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/3/3 20:15
+public interface ParameterizedType extends Type { // 描述使用了泛型参数的类
     /**
      * Returns an array of {@code Type} objects representing the actual type
      * arguments to this type.
@@ -61,7 +61,7 @@ public interface ParameterizedType extends Type {
      *     actual type parameters refer to a parameterized type that cannot
      *     be instantiated for any reason
      * @since 1.5
-     */
+     */ // 获取实际的泛型参数是什么类型, 如果没有指定返回代表泛型参数的符号
     Type[] getActualTypeArguments();
 
     /**
@@ -71,7 +71,7 @@ public interface ParameterizedType extends Type {
      * @return the {@code Type} object representing the class or interface
      *     that declared this type
      * @since 1.5
-     */
+     */ // 返回去除了泛型参数信息的类型比如Comparable<X>返回Comparable
     Type getRawType();
 
     /**
@@ -90,6 +90,6 @@ public interface ParameterizedType extends Type {
      *     refers to a parameterized type that cannot be instantiated
      *     for any reason
      * @since 1.5
-     */
+     */ // 返回参数化类型的所有者, 比如参数化类型是Map.Entry<T,U>, 那么方法返回Map
     Type getOwnerType();
 }
