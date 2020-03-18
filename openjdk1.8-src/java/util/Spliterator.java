@@ -292,8 +292,8 @@ import java.util.function.LongConsumer;
  *
  * @see Collection
  * @since 1.8
- */
-public interface Spliterator<T> {
+ */  // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/3/17 17:20
+public interface Spliterator<T> { // 与iterator相对应, 可分割迭代器spliterator提供了分段多线程遍历目标的能力, 整体上看是多线程遍历提高了效率, 详细到每段还是单线程遍历, 不存在线程安全问题
     /**
      * If a remaining element exists, performs the given action on it,
      * returning {@code true}; else returns {@code false}.  If this
@@ -305,7 +305,7 @@ public interface Spliterator<T> {
      * @return {@code false} if no remaining elements existed
      * upon entry to this method, else {@code true}.
      * @throws NullPointerException if the specified action is null
-     */
+     */ // 如果迭代器中存在下一个元素, 那么对下一个元素执行给定Consumer动作, 并返回true, 否则返回false
     boolean tryAdvance(Consumer<? super T> action);
 
     /**
@@ -321,7 +321,7 @@ public interface Spliterator<T> {
      *
      * @param action The action
      * @throws NullPointerException if the specified action is null
-     */
+     */ /** 将迭代器中所有元素依次遍历执行给定的Consumer动作, 可以看到具体实现就是循环调用 {@link #tryAdvance(Consumer)} */
     default void forEachRemaining(Consumer<? super T> action) {
         do { } while (tryAdvance(action));
     }
@@ -366,8 +366,8 @@ public interface Spliterator<T> {
      *
      * @return a {@code Spliterator} covering some portion of the
      * elements, or {@code null} if this spliterator cannot be split
-     */
-    Spliterator<T> trySplit();
+     */ // 第一个Spliterator实例覆盖了所有元素, 当实例调用trySplit方法后, 产生新的Spliterator实例, 两个实例各覆盖一半元素, 第一个实例覆盖的是后半部分, 可以继续调用产生更多的Spliterator实例
+    Spliterator<T> trySplit(); // 全部Spliterator实例覆盖所有元素, 每个线程拿一个实例进行遍历, 实现整体上并行遍历的效果
 
     /**
      * Returns an estimate of the number of elements that would be
@@ -391,7 +391,7 @@ public interface Spliterator<T> {
      *
      * @return the estimated size, or {@code Long.MAX_VALUE} if infinite,
      *         unknown, or too expensive to compute.
-     */
+     */ /** 评估当前Spliterator实例元素个数, 如果Spliterator实例没有分段, 没有开始遍历, 返回精确值, 否则返回可能不准确的值, 当包含无限个元素或评估代价太大, 则返回{@link Long#MAX_VALUE} */
     long estimateSize();
 
     /**
@@ -403,9 +403,9 @@ public interface Spliterator<T> {
      * {@code -1} otherwise.
      *
      * @return the exact size, if known, else {@code -1}.
-     */
+     */ // 如果能获取精确元素数量那么返回精确数量, 否则返回-1
     default long getExactSizeIfKnown() {
-        return (characteristics() & SIZED) == 0 ? -1L : estimateSize();
+        return (characteristics() & SIZED) == 0 ? -1L : estimateSize(); // 如果Spliterator实例有SIZED特征(代表能精确计算元素数量), 代表有精确数量, 就返回estimateSize()结果
     }
 
     /**
@@ -428,7 +428,7 @@ public interface Spliterator<T> {
      * and {@link #CONCURRENT}.
      *
      * @return a representation of characteristics
-     */
+     */ /** 查询实例具有的特征, 给定的Spliterator实例调用这个方法, 重复调用和在调用{@link #trySplit()}之前或之中时, 返回特征结果应该一致不变, 在调用{@link #trySplit()}之后, 部分特征值可能改变 */
     int characteristics();
 
     /**
@@ -442,9 +442,9 @@ public interface Spliterator<T> {
      * @param characteristics the characteristics to check for
      * @return {@code true} if all the specified characteristics are present,
      * else {@code false}
-     */
+     */ // 判断当前Spliterator实例是否包含传递参数的特征, 注意要判断的参数可以是多个特征, 当具有给定的所有特征时才会返回true
     default boolean hasCharacteristics(int characteristics) {
-        return (characteristics() & characteristics) == characteristics;
+        return (characteristics() & characteristics) == characteristics; // 一个二进制位代表一个特征, 如果参数特征和已经具有的特征与运算结果还是与参数相等, 那么就代表具有参数指定的这些特征
     }
 
     /**
@@ -460,7 +460,7 @@ public interface Spliterator<T> {
      * natural order.
      * @throws IllegalStateException if the spliterator does not report
      *         a characteristic of {@code SORTED}.
-     */
+     */ // 如果创建Spliterator实例的原始对象是通过Comparator保持有序的, 那么返回这个Comparator, 如果是Comparable自然排序, 返回null, 如果是无序的, 这个方法会抛出异常
     default Comparator<? super T> getComparator() {
         throw new IllegalStateException();
     }
@@ -482,14 +482,14 @@ public interface Spliterator<T> {
      * such as {@link HashSet}. Clients of a Spliterator that reports
      * {@code ORDERED} are expected to preserve ordering constraints in
      * non-commutative parallel computations.
-     */
+     */ // 特征值代表源对象中元素是有序的, 例如源数据是List
     public static final int ORDERED    = 0x00000010;
 
     /**
      * Characteristic value signifying that, for each pair of
      * encountered elements {@code x, y}, {@code !x.equals(y)}. This
      * applies for example, to a Spliterator based on a {@link Set}.
-     */
+     */ // 特征值代表源对象中元素无重复, 任意元素!x.equals(y), 例如源对象是Set
     public static final int DISTINCT   = 0x00000001;
 
     /**
@@ -503,7 +503,7 @@ public interface Spliterator<T> {
      *
      * @apiNote The spliterators for {@code Collection} classes in the JDK that
      * implement {@link NavigableSet} or {@link SortedSet} report {@code SORTED}.
-     */
+     */ // 特征值代表源对象中元素是按照指定的Comparator排序的
     public static final int SORTED     = 0x00000004;
 
     /**
@@ -517,14 +517,14 @@ public interface Spliterator<T> {
      * {@code Collection} report this characteristic. Sub-spliterators, such as
      * those for {@link HashSet}, that cover a sub-set of elements and
      * approximate their reported size do not.
-     */
+     */ // 特征值代表源对象在遍历或者继续分割前的有限的元素数量, 也可以表示源对象没有改动的情况下能获得将要遍历的元素的精确个数
     public static final int SIZED      = 0x00000040;
 
     /**
      * Characteristic value signifying that the source guarantees that
      * encountered elements will not be {@code null}. (This applies,
      * for example, to most concurrent collections, queues, and maps.)
-     */
+     */ // 特征值代表源对象中元素不存在null值, 这个特征出现在大多数并发集合队列和map中
     public static final int NONNULL    = 0x00000100;
 
     /**
@@ -535,7 +535,7 @@ public interface Spliterator<T> {
      * to have a documented policy (for example throwing
      * {@link ConcurrentModificationException}) concerning structural
      * interference detected during traversal.
-     */
+     */ // 特征值代表源对象是不可改变的, 在遍历过程中源对象中元素不会出现新增删除和替换的情况
     public static final int IMMUTABLE  = 0x00000400;
 
     /**
@@ -557,7 +557,7 @@ public interface Spliterator<T> {
      * guaranteeing accuracy with respect to elements present at the point of
      * Spliterator construction, but possibly not reflecting subsequent
      * additions or removals.
-     */
+     */ // 特征值代表源对象中元素在遍历时支持多线程并发修改源对象中的元素
     public static final int CONCURRENT = 0x00001000;
 
     /**
@@ -574,7 +574,7 @@ public interface Spliterator<T> {
      * approximately balanced binary tree, will report {@code SIZED} but not
      * {@code SUBSIZED}, since it is common to know the size of the entire tree
      * but not the exact sizes of subtrees.
-     */
+     */ // 特征值代表所有子Spliterator实例也都拥有SIZED和SUBSIZED特征
     public static final int SUBSIZED = 0x00004000;
 
     /**
@@ -595,10 +595,10 @@ public interface Spliterator<T> {
      * @see Spliterator.OfLong
      * @see Spliterator.OfDouble
      * @since 1.8
-     */
+     */ // 针对原始数据类型包装类的可分割迭代器, 泛型T是要遍历的元素类型, T_CONS是要应用的动作Consumer类型, T_SPLITR是可分割迭代器类型, T_SPLITR需要继承自OfPrimitive
     public interface OfPrimitive<T, T_CONS, T_SPLITR extends Spliterator.OfPrimitive<T, T_CONS, T_SPLITR>>
             extends Spliterator<T> {
-        @Override
+        @Override /** 逻辑与{@link Spliterator#trySplit()}一致, 泛型限制了返回类型 */
         T_SPLITR trySplit();
 
         /**
@@ -612,7 +612,7 @@ public interface Spliterator<T> {
          * @return {@code false} if no remaining elements existed
          * upon entry to this method, else {@code true}.
          * @throws NullPointerException if the specified action is null
-         */
+         */ /** 逻辑与{@link Spliterator#tryAdvance(Consumer)}一致, 泛型限制了参数类型 */
         @SuppressWarnings("overloads")
         boolean tryAdvance(T_CONS action);
 
@@ -630,7 +630,7 @@ public interface Spliterator<T> {
          *
          * @param action The action
          * @throws NullPointerException if the specified action is null
-         */
+         */ /** 逻辑与{@link Spliterator#forEachRemaining(Consumer)}一致, 泛型限制了参数类型 */
         @SuppressWarnings("overloads")
         default void forEachRemaining(T_CONS action) {
             do { } while (tryAdvance(action));
@@ -642,13 +642,13 @@ public interface Spliterator<T> {
      * @since 1.8
      */
     public interface OfInt extends OfPrimitive<Integer, IntConsumer, OfInt> {
-
+        /** 逻辑与{@link Spliterator#trySplit()}一致, 泛型限制了返回类型 */
         @Override
         OfInt trySplit();
-
+        /** 逻辑与{@link Spliterator#tryAdvance(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         boolean tryAdvance(IntConsumer action);
-
+        /** 逻辑与{@link Spliterator#forEachRemaining(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         default void forEachRemaining(IntConsumer action) {
             do { } while (tryAdvance(action));
@@ -663,7 +663,7 @@ public interface Spliterator<T> {
          * the action is adapted to an instance of {@code IntConsumer}, by
          * boxing the argument of {@code IntConsumer}, and then passed to
          * {@link #tryAdvance(java.util.function.IntConsumer)}.
-         */
+         */ /** 逻辑与{@link Spliterator#tryAdvance(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         default boolean tryAdvance(Consumer<? super Integer> action) {
             if (action instanceof IntConsumer) {
@@ -686,7 +686,7 @@ public interface Spliterator<T> {
          * the action is adapted to an instance of {@code IntConsumer}, by
          * boxing the argument of {@code IntConsumer}, and then passed to
          * {@link #forEachRemaining(java.util.function.IntConsumer)}.
-         */
+         */ /** 逻辑与{@link Spliterator#forEachRemaining(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         default void forEachRemaining(Consumer<? super Integer> action) {
             if (action instanceof IntConsumer) {
@@ -706,13 +706,13 @@ public interface Spliterator<T> {
      * @since 1.8
      */
     public interface OfLong extends OfPrimitive<Long, LongConsumer, OfLong> {
-
+        /** 逻辑与{@link Spliterator#trySplit()}一致, 泛型限制了返回类型 */
         @Override
         OfLong trySplit();
-
+        /** 逻辑与{@link Spliterator#tryAdvance(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         boolean tryAdvance(LongConsumer action);
-
+        /** 逻辑与{@link Spliterator#forEachRemaining(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         default void forEachRemaining(LongConsumer action) {
             do { } while (tryAdvance(action));
@@ -727,7 +727,7 @@ public interface Spliterator<T> {
          * the action is adapted to an instance of {@code LongConsumer}, by
          * boxing the argument of {@code LongConsumer}, and then passed to
          * {@link #tryAdvance(java.util.function.LongConsumer)}.
-         */
+         */ /** 逻辑与{@link Spliterator#tryAdvance(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         default boolean tryAdvance(Consumer<? super Long> action) {
             if (action instanceof LongConsumer) {
@@ -750,7 +750,7 @@ public interface Spliterator<T> {
          * the action is adapted to an instance of {@code LongConsumer}, by
          * boxing the argument of {@code LongConsumer}, and then passed to
          * {@link #forEachRemaining(java.util.function.LongConsumer)}.
-         */
+         */ /** 逻辑与{@link Spliterator#forEachRemaining(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         default void forEachRemaining(Consumer<? super Long> action) {
             if (action instanceof LongConsumer) {
@@ -770,13 +770,13 @@ public interface Spliterator<T> {
      * @since 1.8
      */
     public interface OfDouble extends OfPrimitive<Double, DoubleConsumer, OfDouble> {
-
+        /** 逻辑与{@link Spliterator#trySplit()}一致, 泛型限制了返回类型 */
         @Override
         OfDouble trySplit();
-
+        /** 逻辑与{@link Spliterator#tryAdvance(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         boolean tryAdvance(DoubleConsumer action);
-
+        /** 逻辑与{@link Spliterator#forEachRemaining(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         default void forEachRemaining(DoubleConsumer action) {
             do { } while (tryAdvance(action));
@@ -791,7 +791,7 @@ public interface Spliterator<T> {
          * the action is adapted to an instance of {@code DoubleConsumer}, by
          * boxing the argument of {@code DoubleConsumer}, and then passed to
          * {@link #tryAdvance(java.util.function.DoubleConsumer)}.
-         */
+         */ /** 逻辑与{@link Spliterator#tryAdvance(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         default boolean tryAdvance(Consumer<? super Double> action) {
             if (action instanceof DoubleConsumer) {
@@ -815,7 +815,7 @@ public interface Spliterator<T> {
          * {@code DoubleConsumer}, by boxing the argument of
          * {@code DoubleConsumer}, and then passed to
          * {@link #forEachRemaining(java.util.function.DoubleConsumer)}.
-         */
+         */ /** 逻辑与{@link Spliterator#forEachRemaining(Consumer)}一致, 泛型限制了参数类型 */
         @Override
         default void forEachRemaining(Consumer<? super Double> action) {
             if (action instanceof DoubleConsumer) {
