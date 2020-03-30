@@ -125,9 +125,9 @@ import java.io.Serializable;
  * @see Collection
  * @see Set
  * @since 1.2
- */
-public interface Map<K,V> {
-    // Query Operations
+ */  // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/3/30 17:58
+public interface Map<K,V> { // Map接口规定了key-value结构类应该具有的方法, 与Collection接口平级, Collection接口描述了只有value的集合结构
+    // Query Operations 查询操作
 
     /**
      * Returns the number of key-value mappings in this map.  If the
@@ -135,14 +135,14 @@ public interface Map<K,V> {
      * <tt>Integer.MAX_VALUE</tt>.
      *
      * @return the number of key-value mappings in this map
-     */
+     */ // 返回包含的key-value键值对数量
     int size();
 
     /**
      * Returns <tt>true</tt> if this map contains no key-value mappings.
      *
      * @return <tt>true</tt> if this map contains no key-value mappings
-     */
+     */ // 如果Map实例不包含任何key-value那么返回true
     boolean isEmpty();
 
     /**
@@ -161,7 +161,7 @@ public interface Map<K,V> {
      * @throws NullPointerException if the specified key is null and this map
      *         does not permit null keys
      * (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
-     */
+     */ // 如果Map实例存在指定的key对应的键值对, 那么返回true
     boolean containsKey(Object key);
 
     /**
@@ -181,7 +181,7 @@ public interface Map<K,V> {
      * @throws NullPointerException if the specified value is null and this
      *         map does not permit null values
      * (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
-     */
+     */ // 如果Map实例中存在一个或多个指定值则返回true
     boolean containsValue(Object value);
 
     /**
@@ -208,10 +208,10 @@ public interface Map<K,V> {
      * @throws NullPointerException if the specified key is null and this map
      *         does not permit null keys
      * (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
-     */
+     */ // 返回指定key对应的value, 不存在指定key返回null
     V get(Object key);
 
-    // Modification Operations
+    // Modification Operations 修改操作
 
     /**
      * Associates the specified value with the specified key in this map
@@ -236,7 +236,7 @@ public interface Map<K,V> {
      *         and this map does not permit null keys or values
      * @throws IllegalArgumentException if some property of the specified key
      *         or value prevents it from being stored in this map
-     */
+     */ // 将指定key-value键值对放入Map实例中, 如果已经存在相同的key则用指定的value替换旧值, 有旧值返回旧值否则返回null
     V put(K key, V value);
 
     /**
@@ -268,11 +268,11 @@ public interface Map<K,V> {
      * @throws NullPointerException if the specified key is null and this
      *         map does not permit null keys
      * (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
-     */
+     */ // 移除指定key对应的key-value键值对, 并返回被移除的value, 不存在指定key直接返回null
     V remove(Object key);
 
 
-    // Bulk Operations
+    // Bulk Operations 批量操作
 
     /**
      * Copies all of the mappings from the specified map to this map
@@ -292,7 +292,7 @@ public interface Map<K,V> {
      *         specified map contains null keys or values
      * @throws IllegalArgumentException if some property of a key or value in
      *         the specified map prevents it from being stored in this map
-     */
+     */ // 将给定Map实例包含的key-value键值对全部放到当前实例中
     void putAll(Map<? extends K, ? extends V> m);
 
     /**
@@ -301,11 +301,11 @@ public interface Map<K,V> {
      *
      * @throws UnsupportedOperationException if the <tt>clear</tt> operation
      *         is not supported by this map
-     */
+     */ // 清空当前Map实例所有的key-value
     void clear();
 
 
-    // Views
+    // Views 数据视图
 
     /**
      * Returns a {@link Set} view of the keys contained in this map.
@@ -321,7 +321,7 @@ public interface Map<K,V> {
      * operations.
      *
      * @return a set view of the keys contained in this map
-     */
+     */ // 提供当前Map实例所有key组成的Set集合视图
     Set<K> keySet();
 
     /**
@@ -338,7 +338,7 @@ public interface Map<K,V> {
      * support the <tt>add</tt> or <tt>addAll</tt> operations.
      *
      * @return a collection view of the values contained in this map
-     */
+     */ // 提供当前Map实例所有value组成的Collection集合视图
     Collection<V> values();
 
     /**
@@ -356,7 +356,7 @@ public interface Map<K,V> {
      * <tt>add</tt> or <tt>addAll</tt> operations.
      *
      * @return a set view of the mappings contained in this map
-     */
+     */ // 提供当前Map实例所有key-value对组成的Set集合视图
     Set<Map.Entry<K, V>> entrySet();
 
     /**
@@ -371,7 +371,7 @@ public interface Map<K,V> {
      *
      * @see Map#entrySet()
      * @since 1.2
-     */
+     */ // 描述key-value键值对应该具有的方法
     interface Entry<K,V> {
         /**
          * Returns the key corresponding to this entry.
@@ -380,7 +380,7 @@ public interface Map<K,V> {
          * @throws IllegalStateException implementations may, but are not
          *         required to, throw this exception if the entry has been
          *         removed from the backing map.
-         */
+         */ // 获得当前Entry实例的key
         K getKey();
 
         /**
@@ -392,7 +392,7 @@ public interface Map<K,V> {
          * @throws IllegalStateException implementations may, but are not
          *         required to, throw this exception if the entry has been
          *         removed from the backing map.
-         */
+         */ // 获得当前Entry实例的value
         V getValue();
 
         /**
@@ -414,7 +414,7 @@ public interface Map<K,V> {
          * @throws IllegalStateException implementations may, but are not
          *         required to, throw this exception if the entry has been
          *         removed from the backing map.
-         */
+         */ // 替换当前Entry实例中包含的value并返回旧值
         V setValue(V value);
 
         /**
@@ -434,7 +434,7 @@ public interface Map<K,V> {
          * @param o object to be compared for equality with this map entry
          * @return <tt>true</tt> if the specified object is equal to this map
          *         entry
-         */
+         */ // 比较两个Entry实例是否相等, 两个实例key与value都相等时Entry实例相等
         boolean equals(Object o);
 
         /**
@@ -452,7 +452,7 @@ public interface Map<K,V> {
          * @see Object#hashCode()
          * @see Object#equals(Object)
          * @see #equals(Object)
-         */
+         */ // 获得当前Entry实例的hashCode值
         int hashCode();
 
         /**
@@ -466,7 +466,7 @@ public interface Map<K,V> {
          * @return a comparator that compares {@link Map.Entry} in natural order on key.
          * @see Comparable
          * @since 1.8
-         */
+         */ // 返回一个Entry比较器, 通过比较Entry中的key的升序的实现了Serializable接口的Comparator实例, 比较调用的是Entry实例的compareTo方法
         public static <K extends Comparable<? super K>, V> Comparator<Map.Entry<K,V>> comparingByKey() {
             return (Comparator<Map.Entry<K, V>> & Serializable)
                 (c1, c2) -> c1.getKey().compareTo(c2.getKey());
@@ -483,7 +483,7 @@ public interface Map<K,V> {
          * @return a comparator that compares {@link Map.Entry} in natural order on value.
          * @see Comparable
          * @since 1.8
-         */
+         */ // 返回一个Entry比较器, 通过比较Entry中的value的升序的实现了Serializable接口的Comparator实例, 比较调用的是Entry实例的compareTo方法
         public static <K, V extends Comparable<? super V>> Comparator<Map.Entry<K,V>> comparingByValue() {
             return (Comparator<Map.Entry<K, V>> & Serializable)
                 (c1, c2) -> c1.getValue().compareTo(c2.getValue());
@@ -501,7 +501,7 @@ public interface Map<K,V> {
          * @param  cmp the key {@link Comparator}
          * @return a comparator that compares {@link Map.Entry} by the key.
          * @since 1.8
-         */
+         */ // 返回一个比较器, 这个比较器通过参数指定的Comparator比较key, 并且比较器实现了Serializable接口
         public static <K, V> Comparator<Map.Entry<K, V>> comparingByKey(Comparator<? super K> cmp) {
             Objects.requireNonNull(cmp);
             return (Comparator<Map.Entry<K, V>> & Serializable)
@@ -520,7 +520,7 @@ public interface Map<K,V> {
          * @param  cmp the value {@link Comparator}
          * @return a comparator that compares {@link Map.Entry} by the value.
          * @since 1.8
-         */
+         */ // 返回一个比较器, 这个比较器通过参数指定的Comparator比较value, 并且比较器实现了Serializable接口
         public static <K, V> Comparator<Map.Entry<K, V>> comparingByValue(Comparator<? super V> cmp) {
             Objects.requireNonNull(cmp);
             return (Comparator<Map.Entry<K, V>> & Serializable)
@@ -541,7 +541,7 @@ public interface Map<K,V> {
      *
      * @param o object to be compared for equality with this map
      * @return <tt>true</tt> if the specified object is equal to this map
-     */
+     */ // 两个Map实例包含的EntrySet相等视为相等, 返回true
     boolean equals(Object o);
 
     /**
@@ -556,10 +556,10 @@ public interface Map<K,V> {
      * @see Map.Entry#hashCode()
      * @see Object#equals(Object)
      * @see #equals(Object)
-     */
+     */ // 返回当前Map实例的hashcode值
     int hashCode();
 
-    // Defaultable methods
+    // Defaultable methods Map接口提供的带有默认实现的方法
 
     /**
      * Returns the value to which the specified key is mapped, or
@@ -582,7 +582,7 @@ public interface Map<K,V> {
      * does not permit null keys
      * (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
-     */
+     */ // 返回给定key对应的value, 如果key不存在返回给定的默认值
     default V getOrDefault(Object key, V defaultValue) {
         V v;
         return (((v = get(key)) != null) || containsKey(key))
@@ -614,7 +614,7 @@ public interface Map<K,V> {
      * @throws ConcurrentModificationException if an entry is found to be
      * removed during iteration
      * @since 1.8
-     */
+     */ // 遍历Map实例包含的所有Entry, 对每个Entry实例的key-value执行BiConsumer操作
     default void forEach(BiConsumer<? super K, ? super V> action) {
         Objects.requireNonNull(action);
         for (Map.Entry<K, V> entry : entrySet()) {
@@ -669,7 +669,7 @@ public interface Map<K,V> {
      * @throws ConcurrentModificationException if an entry is found to be
      * removed during iteration
      * @since 1.8
-     */
+     */ // 遍历Map实例包含的所有Entry, 对每个Entry的key-value执行一个BiFunction函数, 并用BiFunction返回值替换Entry的值
     default void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
         Objects.requireNonNull(function);
         for (Map.Entry<K, V> entry : entrySet()) {
@@ -737,7 +737,7 @@ public interface Map<K,V> {
      *         or value prevents it from being stored in this map
      *         (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
-     */
+     */ // 如果当前Map实例不存在给定的key, 那么将给定的key-value放入实例, 即当已经存在指定的key时, 返回旧值并且不做其他操作, 不存在时会返回null并将key-value放入实例
     default V putIfAbsent(K key, V value) {
         V v = get(key);
         if (v == null) {
@@ -780,7 +780,7 @@ public interface Map<K,V> {
      *         and this map does not permit null keys or values
      *         (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
-     */
+     */ // 当前Map实例存在给定key且对应的value与给定的参数value相等时, 移除指定key对应的key-value
     default boolean remove(Object key, Object value) {
         Object curValue = get(key);
         if (!Objects.equals(curValue, value) ||
@@ -832,7 +832,7 @@ public interface Map<K,V> {
      * @throws IllegalArgumentException if some property of a specified key
      *         or value prevents it from being stored in this map
      * @since 1.8
-     */
+     */ // 如果当前Map实例存在给定的key, 且key对应的value与参数oldValue相等, 那么用newValue替换oldValue
     default boolean replace(K key, V oldValue, V newValue) {
         Object curValue = get(key);
         if (!Objects.equals(curValue, oldValue) ||
@@ -880,7 +880,7 @@ public interface Map<K,V> {
      * @throws IllegalArgumentException if some property of the specified key
      *         or value prevents it from being stored in this map
      * @since 1.8
-     */
+     */ // 如果当前Map实例包含给定key, 那么key对应的value用给定的value替换
     default V replace(K key, V value) {
         V curValue;
         if (((curValue = get(key)) != null) || containsKey(key)) {
@@ -947,15 +947,15 @@ public interface Map<K,V> {
      *         prevents it from being stored in this map
      *         (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
-     */
+     */ // 判断当前Map实例是否包含指定的key, 且指定的key对应的value有值, 如果有值返回当前值, 无key或对应值为null则通过给定的Function计算一个值出来, 将计算出的值放入实例并返回计算出的值
     default V computeIfAbsent(K key,
             Function<? super K, ? extends V> mappingFunction) {
         Objects.requireNonNull(mappingFunction);
         V v;
-        if ((v = get(key)) == null) {
+        if ((v = get(key)) == null) { // 指定的key不存在或者其对应值为null
             V newValue;
-            if ((newValue = mappingFunction.apply(key)) != null) {
-                put(key, newValue);
+            if ((newValue = mappingFunction.apply(key)) != null) { // 通过给定的Function计算出的新值
+                put(key, newValue); // 将新值放入当前Map实例
                 return newValue;
             }
         }
@@ -1008,18 +1008,18 @@ public interface Map<K,V> {
      *         prevents it from being stored in this map
      *         (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
-     */
+     */ // 如果存在给定key且对应的value不为null, 用给定的BiFunction计算出新值, 替换旧值, 并返回新值
     default V computeIfPresent(K key,
             BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-        Objects.requireNonNull(remappingFunction);
+        Objects.requireNonNull(remappingFunction); // 给定的函数参数不能为null
         V oldValue;
-        if ((oldValue = get(key)) != null) {
-            V newValue = remappingFunction.apply(key, oldValue);
+        if ((oldValue = get(key)) != null) { // 存在旧值
+            V newValue = remappingFunction.apply(key, oldValue); // 计算新值
             if (newValue != null) {
-                put(key, newValue);
+                put(key, newValue); // 新值替换旧值
                 return newValue;
             } else {
-                remove(key);
+                remove(key); // 计算的新值为null时会移除指定的key
                 return null;
             }
         } else {
@@ -1084,14 +1084,14 @@ public interface Map<K,V> {
      *         prevents it from being stored in this map
      *         (<a href="{@docRoot}/java/util/Collection.html#optional-restrictions">optional</a>)
      * @since 1.8
-     */
+     */ // 通过BiFunction计算新值, 并添加或者替换掉指定的key对应的值. 新值通过给定的key以及其获得的value传入BiFunction获得
     default V compute(K key,
             BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         Objects.requireNonNull(remappingFunction);
-        V oldValue = get(key);
+        V oldValue = get(key); // 获得旧值
 
-        V newValue = remappingFunction.apply(key, oldValue);
-        if (newValue == null) {
+        V newValue = remappingFunction.apply(key, oldValue); // 通过指定key以及对应的oldValue计算新值
+        if (newValue == null) { // 新值等于null时移除给定key
             // delete mapping
             if (oldValue != null || containsKey(key)) {
                 // something to remove
@@ -1101,7 +1101,7 @@ public interface Map<K,V> {
                 // nothing to do. Leave things as they were.
                 return null;
             }
-        } else {
+        } else { // 新计算的值不为null, 新增或者替换key-newValue
             // add or replace old mapping
             put(key, newValue);
             return newValue;
@@ -1165,7 +1165,7 @@ public interface Map<K,V> {
      *         does not support null keys or the value or remappingFunction is
      *         null
      * @since 1.8
-     */
+     */ // 如果给定的key不存在, 或者给定的key对应的值是null, 那么将给定的value设置为key对应的值, 如果存在oldValue那么用oldValue与给定value计算一个新值, 将新值设置为key对应的值
     default V merge(K key, V value,
             BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
         Objects.requireNonNull(remappingFunction);
@@ -1173,7 +1173,7 @@ public interface Map<K,V> {
         V oldValue = get(key);
         V newValue = (oldValue == null) ? value :
                    remappingFunction.apply(oldValue, value);
-        if(newValue == null) {
+        if(newValue == null) { // 计算的新值为null时移除给定的key
             remove(key);
         } else {
             put(key, newValue);
