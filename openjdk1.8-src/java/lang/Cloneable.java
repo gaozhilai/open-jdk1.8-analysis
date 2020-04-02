@@ -49,6 +49,6 @@ package java.lang;
  * @see     java.lang.CloneNotSupportedException
  * @see     java.lang.Object#clone()
  * @since   JDK1.0
- */
-public interface Cloneable {
-}
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/1 13:51
+public interface Cloneable { // Cloneable接口没有定义任何方法或字段, 仅作为一个标记, 标明实现了此接口的类是可以调用其clone方法进行对象克隆复制
+}/** 如果类没有实现此接口, 可以覆写{@link java.lang.Object#clone()}, 抛出CloneNotSupportedException异常表示不支持克隆 */

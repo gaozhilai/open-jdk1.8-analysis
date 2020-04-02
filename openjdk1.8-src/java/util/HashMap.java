@@ -2178,7 +2178,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         }
 
         /* ------------------------------------------------------------ */
-        // Red-black tree methods, all adapted from CLR
+        // Red-black tree methods, all adapted from CLR 所有红黑树方法, 思路来自算法导论红黑树部分. CLR为算法导论作者名字Cormen,Leiserson,Rivest and Stein的缩写
 
         static <K,V> TreeNode<K,V> rotateLeft(TreeNode<K,V> root,
                                               TreeNode<K,V> p) {

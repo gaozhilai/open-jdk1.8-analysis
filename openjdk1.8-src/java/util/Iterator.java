@@ -50,15 +50,15 @@ import java.util.function.Consumer;
  * @see ListIterator
  * @see Iterable
  * @since 1.2
- */
-public interface Iterator<E> {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/1 16:21
+public interface Iterator<E> { /** 集合中的迭代器, 用于遍历集合元素. Iterator用于取代{@link Enumeration}, Iterator支持遍历过程中修改集合元素, 方法名更明确 */
     /**
      * Returns {@code true} if the iteration has more elements.
      * (In other words, returns {@code true} if {@link #next} would
      * return an element rather than throwing an exception.)
      *
      * @return {@code true} if the iteration has more elements
-     */
+     */ // 判断当前集合是否还有更多元素需要遍历, 如果是返回true
     boolean hasNext();
 
     /**
@@ -66,7 +66,7 @@ public interface Iterator<E> {
      *
      * @return the next element in the iteration
      * @throws NoSuchElementException if the iteration has no more elements
-     */
+     */ /** 返回下一个元素, 如果不存在更多元素抛出{@link NoSuchElementException}异常, 所以调用此方法前要通过{@link #hasNext()}方法判断是否有更多元素 */
     E next();
 
     /**
@@ -88,7 +88,7 @@ public interface Iterator<E> {
      *         yet been called, or the {@code remove} method has already
      *         been called after the last call to the {@code next}
      *         method
-     */
+     */ /** 将迭代器当前最后一个返回的元素从底层数组中移除, 此方法只能在每次{@link #next()}方法调用后调用一次 */
     default void remove() {
         throw new UnsupportedOperationException("remove");
     }
@@ -109,7 +109,7 @@ public interface Iterator<E> {
      * @param action The action to be performed for each element
      * @throws NullPointerException if the specified action is null
      * @since 1.8
-     */
+     */ // 对当前迭代器剩余需要遍历的每一个元素执行给定动作
     default void forEachRemaining(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         while (hasNext())

@@ -41,13 +41,13 @@ import java.util.function.Consumer;
  *
  * @since 1.5
  * @jls 14.14.2 The enhanced for statement
- */
-public interface Iterable<T> {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/1 16:13
+public interface Iterable<T> { // 标明了实现此接口的类有被迭代器遍历的能力, 支持for(T t : iterable)增强for循环的语法糖
     /**
      * Returns an iterator over elements of type {@code T}.
      *
      * @return an Iterator.
-     */
+     */ // 返回一个元素为T类型的迭代器
     Iterator<T> iterator();
 
     /**
@@ -68,7 +68,7 @@ public interface Iterable<T> {
      * @param action The action to be performed for each element
      * @throws NullPointerException if the specified action is null
      * @since 1.8
-     */
+     */ // JDK1.8新增方法, 遍历所有元素, 并对每个元素执行给定的动作
     default void forEach(Consumer<? super T> action) {
         Objects.requireNonNull(action);
         for (T t : this) {
@@ -96,7 +96,7 @@ public interface Iterable<T> {
      * @return a {@code Spliterator} over the elements described by this
      * {@code Iterable}.
      * @since 1.8
-     */
+     */ /** 返回一个可分割迭代器, 详细注释见{@link Spliterator} */
     default Spliterator<T> spliterator() {
         return Spliterators.spliteratorUnknownSize(iterator(), 0);
     }

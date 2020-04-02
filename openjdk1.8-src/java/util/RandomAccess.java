@@ -63,6 +63,6 @@ package java.util;
  * Java Collections Framework</a>.
  *
  * @since 1.4
- */
-public interface RandomAccess {
-}
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/1 14:05
+public interface RandomAccess { // RandomAccess接口没有定义任何方法或者字段, 仅作为一个标记, 标明实现此接口的类包含的数据支持高效的随机访问, 而不是顺序访问
+} // 假设有一个算法可以接受list作为参数, 那么算法可以根据参数是否实现了此接口, 判断可以高效的进行随机访问还是顺序访问

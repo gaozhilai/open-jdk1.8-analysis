@@ -165,6 +165,6 @@ package java.io;
  * @see java.io.ObjectInput
  * @see java.io.Externalizable
  * @since   JDK1.1
- */
-public interface Serializable {
-}
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/1 11:12
+public interface Serializable { // 序列化接口没有定义任何方法或字段, 仅作为一个标记, 标明实现此接口的类可以被writeObject方法序列化和readObject方法反序列化
+}/** 序列化方法{@link java.io.ObjectOutput#writeObject(java.lang.Object)}, 反序列化方法{@link java.io.ObjectInput#readObject()} */
