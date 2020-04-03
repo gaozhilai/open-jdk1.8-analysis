@@ -104,9 +104,9 @@ import java.util.Comparators;
  * @see Comparable
  * @see java.io.Serializable
  * @since 1.2
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/2 18:01
 @FunctionalInterface
-public interface Comparator<T> {
+public interface Comparator<T> { // 比较器接口是一个函数式接口, 支持函数式语法糖写法. 用于提供指定类型对象比较大小的逻辑
     /**
      * Compares its two arguments for order.  Returns a negative integer,
      * zero, or a positive integer as the first argument is less than, equal
@@ -146,7 +146,7 @@ public interface Comparator<T> {
      *         comparator does not permit null arguments
      * @throws ClassCastException if the arguments' types prevent them from
      *         being compared by this comparator.
-     */
+     */ // 比较两个对象大小关系, 当o1大于o2时返回正数, o1等于o2返回0, o1小于o2时返回负数
     int compare(T o1, T o2);
 
     /**
@@ -170,8 +170,8 @@ public interface Comparator<T> {
      *          comparator.
      * @see Object#equals(Object)
      * @see Object#hashCode()
-     */
-    boolean equals(Object obj);
+     */ // equals方法为当前接口覆写Object对象的方法, 不违背函数式接口约束. 在这里覆写是为了提供额外的javadoc说明, 具体实现类可以不覆写equals方法, 因为实现类继承了Object的默认实现
+    boolean equals(Object obj); // 具体此比较器接口实现类可以考虑覆写此方法, 当两个不同的比较器实现类表示的顺序一致时, 就可以视为两个不同实现类的对象相等. 为已有的比较器提供高性能的替代比较器
 
     /**
      * Returns a comparator that imposes the reverse ordering of this
@@ -180,7 +180,7 @@ public interface Comparator<T> {
      * @return a comparator that imposes the reverse ordering of this
      *         comparator.
      * @since 1.8
-     */
+     */ // 返回一个与当前Comparator实例相反的顺序, 实际就是返回一个新的Comparator实现类, 这个实现类将要比较的参数反向传入当前比较器实例, 自然得到反序了
     default Comparator<T> reversed() {
         return Collections.reverseOrder(this);
     }
@@ -209,7 +209,7 @@ public interface Comparator<T> {
      *         other comparator
      * @throws NullPointerException if the argument is null.
      * @since 1.8
-     */
+     */ // 在当前比较器上再附加一个其他比较器, 两个元素在当前比较器判断为相等时调用附加比较器比较. 可以多次调用此方法实现多个o1 equals o2 then other逻辑
     default Comparator<T> thenComparing(Comparator<? super T> other) {
         Objects.requireNonNull(other);
         return (Comparator<T> & Serializable) (c1, c2) -> {
@@ -234,7 +234,7 @@ public interface Comparator<T> {
      * @see #comparing(Function, Comparator)
      * @see #thenComparing(Comparator)
      * @since 1.8
-     */
+     */ /** 逻辑与{@link #thenComparing(Comparator)}一致, 不过此处附加一个从元素中抽取对应key的Function, 附加的额外比较器比较的依据也是元素的key */
     default <U> Comparator<T> thenComparing(
             Function<? super T, ? extends U> keyExtractor,
             Comparator<? super U> keyComparator)
@@ -258,7 +258,7 @@ public interface Comparator<T> {
      * @see #comparing(Function)
      * @see #thenComparing(Comparator)
      * @since 1.8
-     */
+     */ /** 逻辑与{@link #thenComparing(Comparator)}一致, 不过此处附加一个从元素中抽取对应key的Function, 额外比较逻辑用的key的{@link Comparable#compareTo(java.lang.Object)}方法 */
     default <U extends Comparable<? super U>> Comparator<T> thenComparing(
             Function<? super T, ? extends U> keyExtractor)
     {
@@ -279,7 +279,7 @@ public interface Comparator<T> {
      * @see #comparingInt(ToIntFunction)
      * @see #thenComparing(Comparator)
      * @since 1.8
-     */
+     */ /** 逻辑与{@link #thenComparing(Comparator)}一致, 不过此处附加的从元素中抽取对应key的Function结果为Integer, 额外比较逻辑用的{@link Integer#compare(int, int)}方法 */
     default Comparator<T> thenComparingInt(ToIntFunction<? super T> keyExtractor) {
         return thenComparing(comparingInt(keyExtractor));
     }
@@ -298,7 +298,7 @@ public interface Comparator<T> {
      * @see #comparingLong(ToLongFunction)
      * @see #thenComparing(Comparator)
      * @since 1.8
-     */
+     */ /** 逻辑与{@link #thenComparing(Comparator)}一致, 不过此处附加的从元素中抽取对应key的Function结果为Long, 额外比较逻辑用的{@link Long#compare(long, long)}方法 */
     default Comparator<T> thenComparingLong(ToLongFunction<? super T> keyExtractor) {
         return thenComparing(comparingLong(keyExtractor));
     }
@@ -317,7 +317,7 @@ public interface Comparator<T> {
      * @see #comparingDouble(ToDoubleFunction)
      * @see #thenComparing(Comparator)
      * @since 1.8
-     */
+     */ /** 逻辑与{@link #thenComparing(Comparator)}一致, 不过此处附加的从元素中抽取对应key的Function结果为Double, 额外比较逻辑用的{@link Double#compare(double, double)}方法 */
     default Comparator<T> thenComparingDouble(ToDoubleFunction<? super T> keyExtractor) {
         return thenComparing(comparingDouble(keyExtractor));
     }
@@ -334,7 +334,7 @@ public interface Comparator<T> {
      *         ordering</i> on {@code Comparable} objects.
      * @see Comparable
      * @since 1.8
-     */
+     */ /** 返回一个当前要比较对象{@link Comparable#compareTo(java.lang.Object)}顺序相反的比较器, 其实就是o2.compareTo(o1), 反着调用顺序自然相反了, 要比较的对象要是Comparable的 */
     public static <T extends Comparable<? super T>> Comparator<T> reverseOrder() {
         return Collections.reverseOrder();
     }
@@ -351,7 +351,7 @@ public interface Comparator<T> {
      *         Comparable} objects.
      * @see Comparable
      * @since 1.8
-     */
+     */ /** 返回一个基于o1.compareTo(o2)的自然顺序比较器 */
     @SuppressWarnings("unchecked")
     public static <T extends Comparable<? super T>> Comparator<T> naturalOrder() {
         return (Comparator<T>) Comparators.NaturalOrderComparator.INSTANCE;
@@ -373,7 +373,7 @@ public interface Comparator<T> {
      *         non-null, and compares non-null objects with the supplied
      *         {@code Comparator}.
      * @since 1.8
-     */
+     */ // 返回一个将null元素视为比非null元素小的比较器, 从自然数的顺序即自然顺序来看小的的确在前面, 即nullFirst
     public static <T> Comparator<T> nullsFirst(Comparator<? super T> comparator) {
         return new Comparators.NullComparator<>(true, comparator);
     }
@@ -394,7 +394,7 @@ public interface Comparator<T> {
      *         non-null, and compares non-null objects with the supplied
      *         {@code Comparator}.
      * @since 1.8
-     */
+     */ // 返回一个将null元素视为比非null元素大的比较器, 从自然数的顺序即自然顺序来看大的的确在后面, 即nullLast
     public static <T> Comparator<T> nullsLast(Comparator<? super T> comparator) {
         return new Comparators.NullComparator<>(false, comparator);
     }
@@ -425,7 +425,7 @@ public interface Comparator<T> {
      *         specified {@code Comparator}
      * @throws NullPointerException if either argument is null
      * @since 1.8
-     */
+     */ // 根据提供的元素key抽取Function得到要比较元素对应的key, 并通过给定的keyComparator对key进行比较.
     public static <T, U> Comparator<T> comparing(
             Function<? super T, ? extends U> keyExtractor,
             Comparator<? super U> keyComparator)
@@ -460,7 +460,7 @@ public interface Comparator<T> {
      * @return a comparator that compares by an extracted key
      * @throws NullPointerException if the argument is null
      * @since 1.8
-     */
+     */ /** 通过给定的元素key抽取Function得到要比较的元素的key, 然后调用key的{@link Comparable#compareTo(java.lang.Object)}进行比较 */
     public static <T, U extends Comparable<? super U>> Comparator<T> comparing(
             Function<? super T, ? extends U> keyExtractor)
     {
@@ -483,7 +483,7 @@ public interface Comparator<T> {
      * @see #comparing(Function)
      * @throws NullPointerException if the argument is null
      * @since 1.8
-     */
+     */ /** 通过给定的元素key抽取Function得到要比较的元素的Integer类型的key, 然后调用{@link Integer#compare(int, int)}进行比较 */
     public static <T> Comparator<T> comparingInt(ToIntFunction<? super T> keyExtractor) {
         Objects.requireNonNull(keyExtractor);
         return (Comparator<T> & Serializable)
@@ -504,7 +504,7 @@ public interface Comparator<T> {
      * @see #comparing(Function)
      * @throws NullPointerException if the argument is null
      * @since 1.8
-     */
+     */ /** 通过给定的元素key抽取Function得到要比较的元素的Long类型的key, 然后调用{@link Long#compare(long, long)}进行比较 */
     public static <T> Comparator<T> comparingLong(ToLongFunction<? super T> keyExtractor) {
         Objects.requireNonNull(keyExtractor);
         return (Comparator<T> & Serializable)
@@ -525,7 +525,7 @@ public interface Comparator<T> {
      * @see #comparing(Function)
      * @throws NullPointerException if the argument is null
      * @since 1.8
-     */
+     */ /** 通过给定的元素key抽取Function得到要比较的元素的Double类型的key, 然后调用{@link Double#compare(double, double)}进行比较 */
     public static<T> Comparator<T> comparingDouble(ToDoubleFunction<? super T> keyExtractor) {
         Objects.requireNonNull(keyExtractor);
         return (Comparator<T> & Serializable)

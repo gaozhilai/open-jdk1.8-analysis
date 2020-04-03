@@ -92,8 +92,8 @@ import java.util.*;
  * @author  Josh Bloch
  * @see java.util.Comparator
  * @since 1.2
- */
-public interface Comparable<T> {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/3 16:27
+public interface Comparable<T> { // Comparable接口表明了实现此接口的类其实例本身是可以比较的, 而不需要借助外部的Comparator比较器
     /**
      * Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
@@ -132,6 +132,6 @@ public interface Comparable<T> {
      * @throws NullPointerException if the specified object is null
      * @throws ClassCastException if the specified object's type prevents it
      *         from being compared to this object.
-     */
+     */ // 当前实例调用此方法实现比较逻辑, 方法返回负数, 零, 正数分别代表当前实例小于参数o, 等于参数o, 大于参数o
     public int compareTo(T o);
 }

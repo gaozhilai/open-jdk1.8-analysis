@@ -61,8 +61,8 @@ import java.lang.annotation.*;
  * @jls 9.8 Functional Interfaces
  * @jls 9.4.3 Interface Method Body
  * @since 1.8
- */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/3 16:30
+@Documented // 函数式接口注解, 此注解标记了当前接口是函数式接口, 函数式接口指的是接口有且只有一个抽象方法(接口覆盖声明Object中的方法不会打破这个限制), 这样的接口称之为函数式接口
+@Retention(RetentionPolicy.RUNTIME) // 函数式接口参数支持函数式风格语法糖, 例如Lambda表达式
 @Target(ElementType.TYPE)
 public @interface FunctionalInterface {}

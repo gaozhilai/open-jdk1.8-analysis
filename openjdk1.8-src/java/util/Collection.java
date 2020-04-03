@@ -140,9 +140,9 @@ import java.util.stream.StreamSupport;
  * @see     AbstractCollection
  * @since 1.2
  */
-
-public interface Collection<E> extends Iterable<E> {
-    // Query Operations
+ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/1 16:58
+public interface Collection<E> extends Iterable<E> { // Collection是集合框架集合的顶层根接口, 定义了所有集合类的通用行为
+    // Query Operations 查询操作
 
     /**
      * Returns the number of elements in this collection.  If this collection
@@ -150,14 +150,14 @@ public interface Collection<E> extends Iterable<E> {
      * <tt>Integer.MAX_VALUE</tt>.
      *
      * @return the number of elements in this collection
-     */
+     */ // 返回当前集合包含的元素数量
     int size();
 
     /**
      * Returns <tt>true</tt> if this collection contains no elements.
      *
      * @return <tt>true</tt> if this collection contains no elements
-     */
+     */ // 判断集合是否为空, 当前集合不包含任何元素返回true, 否则返回false
     boolean isEmpty();
 
     /**
@@ -175,7 +175,7 @@ public interface Collection<E> extends Iterable<E> {
      * @throws NullPointerException if the specified element is null and this
      *         collection does not permit null elements
      *         (<a href="#optional-restrictions">optional</a>)
-     */
+     */ // 判断当前集合中是否包含给定对象, 即集合中是否包含与给定对象相等的元素, 相等判定依据是equals方法
     boolean contains(Object o);
 
     /**
@@ -185,7 +185,7 @@ public interface Collection<E> extends Iterable<E> {
      * guarantee).
      *
      * @return an <tt>Iterator</tt> over the elements in this collection
-     */
+     */ // 返回当前集合的迭代器, 用于遍历当前集合包含的元素
     Iterator<E> iterator();
 
     /**
@@ -203,7 +203,7 @@ public interface Collection<E> extends Iterable<E> {
      * APIs.
      *
      * @return an array containing all of the elements in this collection
-     */
+     */ // 返回一个包含当前集合所有元素的数组, 如果当前集合保证元素顺序, 那么返回的数组也要保持一样的顺序. 返回的数组必须是新创建的, 返回数组被修改不会影响到集合, 即使当前集合是基于数组的也要新分配数组
     Object[] toArray();
 
     /**
@@ -248,10 +248,10 @@ public interface Collection<E> extends Iterable<E> {
      *         is not a supertype of the runtime type of every element in
      *         this collection
      * @throws NullPointerException if the specified array is null
-     */
-    <T> T[] toArray(T[] a);
+     */ /** 将当前集合所有元素放入给定数组中并返回, 如果数组位置比实际元素数量多, 多余的位置设置为null, 指定的数组长度小于元素数量, 新分配一个数组并返回 */
+    <T> T[] toArray(T[] a); /** 与{@link #toArray()}主要差异在于能指定返回数组类型 */
 
-    // Modification Operations
+    // Modification Operations 修改操作
 
     /**
      * Ensures that this collection contains the specified element (optional
@@ -285,7 +285,7 @@ public interface Collection<E> extends Iterable<E> {
      *         prevents it from being added to this collection
      * @throws IllegalStateException if the element cannot be added at this
      *         time due to insertion restrictions
-     */
+     */ // 添加元素到集合中, 具体集合类实现此方法逻辑可能添加限制, 如不允许添加null或者添加已存在元素. 当添加成功时返回true, 否则抛出异常
     boolean add(E e);
 
     /**
@@ -307,7 +307,7 @@ public interface Collection<E> extends Iterable<E> {
      *         (<a href="#optional-restrictions">optional</a>)
      * @throws UnsupportedOperationException if the <tt>remove</tt> operation
      *         is not supported by this collection
-     */
+     */ // 从当前集合中移除指定元素
     boolean remove(Object o);
 
 
@@ -330,7 +330,7 @@ public interface Collection<E> extends Iterable<E> {
      *         (<a href="#optional-restrictions">optional</a>),
      *         or if the specified collection is null.
      * @see    #contains(Object)
-     */
+     */ // 判断当前集合是否包含给定的集合中所有的元素, 如果是返回true
     boolean containsAll(Collection<?> c);
 
     /**
@@ -356,7 +356,7 @@ public interface Collection<E> extends Iterable<E> {
      * @throws IllegalStateException if not all the elements can be added at
      *         this time due to insertion restrictions
      * @see #add(Object)
-     */
+     */ // 将给定集合所有元素添加到当前集合中, 因为元素类型或其他原因没有添加成功会抛出相应异常
     boolean addAll(Collection<? extends E> c);
 
     /**
@@ -381,7 +381,7 @@ public interface Collection<E> extends Iterable<E> {
      *         or if the specified collection is null
      * @see #remove(Object)
      * @see #contains(Object)
-     */
+     */ // 从当前集合中移除给定的集合包含的所有元素, 方法执行完成后, 当前集合不会包含任何与给定要移除的集合相同的元素.
     boolean removeAll(Collection<?> c);
 
     /**
@@ -405,14 +405,14 @@ public interface Collection<E> extends Iterable<E> {
      *         matching element cannot be removed or if, in general, removal is not
      *         supported.
      * @since 1.8
-     */
+     */ // 对当前集合所有元素执行给定的断言逻辑, 将符合断言的元素移除
     default boolean removeIf(Predicate<? super E> filter) {
-        Objects.requireNonNull(filter);
+        Objects.requireNonNull(filter); // 断言不能为空
         boolean removed = false;
-        final Iterator<E> each = iterator();
-        while (each.hasNext()) {
-            if (filter.test(each.next())) {
-                each.remove();
+        final Iterator<E> each = iterator(); // 获取当前集合迭代器
+        while (each.hasNext()) { // 遍历集合包含的元素
+            if (filter.test(each.next())) { // 对每个元素执行断言逻辑
+                each.remove(); // 符合断言逻辑的元素被移除
                 removed = true;
             }
         }
@@ -440,7 +440,7 @@ public interface Collection<E> extends Iterable<E> {
      *         or if the specified collection is null
      * @see #remove(Object)
      * @see #contains(Object)
-     */
+     */ // 当前集合只保留与给定集合相同的元素
     boolean retainAll(Collection<?> c);
 
     /**
@@ -449,11 +449,11 @@ public interface Collection<E> extends Iterable<E> {
      *
      * @throws UnsupportedOperationException if the <tt>clear</tt> operation
      *         is not supported by this collection
-     */
+     */ // 清空当前集合所有元素
     void clear();
 
 
-    // Comparison and hashing
+    // Comparison and hashing 比较与hash操作相关方法
 
     /**
      * Compares the specified object with this collection for equality. <p>
@@ -487,7 +487,7 @@ public interface Collection<E> extends Iterable<E> {
      * @see Object#equals(Object)
      * @see Set#equals(Object)
      * @see List#equals(Object)
-     */
+     */ // 判断当前集合与给定集合是否相等, 覆写方法实现逻辑可以是判断引用是否相等也可以是判断值是否相等, 但是只能同类型判断, 不能一个Set跟一个List比较
     boolean equals(Object o);
 
     /**
@@ -504,7 +504,7 @@ public interface Collection<E> extends Iterable<E> {
      *
      * @see Object#hashCode()
      * @see Object#equals(Object)
-     */
+     */ // 返回当前集合的hashCode, 注意复写了equals方法也要覆写此方法, 保证a.equals(b)时a.hashCode()也等于b.hashCode()
     int hashCode();
 
     /**
@@ -556,7 +556,7 @@ public interface Collection<E> extends Iterable<E> {
      *
      * @return a {@code Spliterator} over the elements in this collection
      * @since 1.8
-     */
+     */ // 返回一个默认的基于Iterator的可分割迭代器, 子类应该有更高效的实现
     @Override
     default Spliterator<E> spliterator() {
         return Spliterators.spliterator(this, 0);
@@ -576,7 +576,7 @@ public interface Collection<E> extends Iterable<E> {
      *
      * @return a sequential {@code Stream} over the elements in this collection
      * @since 1.8
-     */
+     */ // 返回一个顺序操作的流对象
     default Stream<E> stream() {
         return StreamSupport.stream(spliterator(), false);
     }
@@ -597,7 +597,7 @@ public interface Collection<E> extends Iterable<E> {
      * @return a possibly parallel {@code Stream} over the elements in this
      * collection
      * @since 1.8
-     */
+     */ // 返回一个支持并发操作的流对象
     default Stream<E> parallelStream() {
         return StreamSupport.stream(spliterator(), true);
     }
