@@ -57,31 +57,31 @@ package java.util;
  * @see Collection
  * @since 1.2
  */
-
-public abstract class AbstractCollection<E> implements Collection<E> {
+ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/3 18:14
+public abstract class AbstractCollection<E> implements Collection<E> { // AbstractCollection抽象类为具体的集合子类提供了骨架实现, 继承此类可以省去实现一些通用方法的付出, 不过也可以选择覆写骨架实现
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
      * implicit.)
-     */
+     */ // 唯一的protected权限的构造器, 只能被子类调用
     protected AbstractCollection() {
     }
 
-    // Query Operations
+    // Query Operations 查询操作
 
     /**
      * Returns an iterator over the elements contained in this collection.
      *
      * @return an iterator over the elements contained in this collection
-     */
+     */ // 返回一个当前集合的迭代器
     public abstract Iterator<E> iterator();
-
+    // 返回当前集合包含的元素数量
     public abstract int size();
 
     /**
      * {@inheritDoc}
      *
      * <p>This implementation returns <tt>size() == 0</tt>.
-     */
+     */ // 判断当前集合是否为空, 即不包含任何元素返回true
     public boolean isEmpty() {
         return size() == 0;
     }
@@ -94,16 +94,16 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      *
      * @throws ClassCastException   {@inheritDoc}
      * @throws NullPointerException {@inheritDoc}
-     */
+     */ // 判断当前集合是否包含指定元素, 此处逻辑通过迭代当前集合所有元素与给定元素比较实现
     public boolean contains(Object o) {
-        Iterator<E> it = iterator();
-        if (o==null) {
-            while (it.hasNext())
-                if (it.next()==null)
+        Iterator<E> it = iterator(); // 获取当前集合迭代器
+        if (o==null) { // 如果给定要判断的元素为null
+            while (it.hasNext()) // 遍历所有元素
+                if (it.next()==null) // 找到了包含相等的元素即null
                     return true;
         } else {
-            while (it.hasNext())
-                if (o.equals(it.next()))
+            while (it.hasNext()) // 遍历所有元素
+                if (o.equals(it.next())) // 一次判断是否与给定元素相等
                     return true;
         }
         return false;
@@ -130,17 +130,17 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      *     list.add(e);
      * return list.toArray();
      * }</pre>
-     */
+     */ // 返回一个包含当前集合所有元素的数组
     public Object[] toArray() {
         // Estimate size of array; be prepared to see more or fewer elements
-        Object[] r = new Object[size()];
-        Iterator<E> it = iterator();
-        for (int i = 0; i < r.length; i++) {
-            if (! it.hasNext()) // fewer elements than expected
-                return Arrays.copyOf(r, i);
-            r[i] = it.next();
+        Object[] r = new Object[size()]; // 这里的size是为了提高性能, 如果集合允许并发操作, size可能不准确, 即使size不准确最后的finishToArray也会返回正确的数组
+        Iterator<E> it = iterator(); // 获得集合迭代器
+        for (int i = 0; i < r.length; i++) { // 遍历数组中每一个位置
+            if (! it.hasNext()) // fewer elements than expected 如果集合时机元素数量比前面size估算的少
+                return Arrays.copyOf(r, i); // 直接将当前包含所有元素的数组复制一份返回, 为了去除已有数组多余的长度
+            r[i] = it.next(); // 将迭代器(集合)中元素放入数组
         }
-        return it.hasNext() ? finishToArray(r, it) : r;
+        return it.hasNext() ? finishToArray(r, it) : r; // 迭代器没有下一个元素即估算的size与实际元素一致, 直接返回数组, 否则处理实际元素大于size的情况
     }
 
     /**
@@ -169,34 +169,34 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      *
      * @throws ArrayStoreException  {@inheritDoc}
      * @throws NullPointerException {@inheritDoc}
-     */
-    @SuppressWarnings("unchecked")
+     */ /** 将当前集合所有元素放入给定数组, 如果给定数组装不下所有元素, 那么返回一个新的长度等于元素数量的装有所有元素的数组 */
+    @SuppressWarnings("unchecked") /** 方法逻辑与{@link #toArray()}一致, 与其不同的是可以指定数组元素类型 */
     public <T> T[] toArray(T[] a) {
         // Estimate size of array; be prepared to see more or fewer elements
-        int size = size();
-        T[] r = a.length >= size ? a :
+        int size = size(); // 为了提高性能, 评估集合元素数量
+        T[] r = a.length >= size ? a : // 如果给定数组长度大于评估的size, 那么给定数组能装下所有元素, 使用给定参数的数组
                   (T[])java.lang.reflect.Array
-                  .newInstance(a.getClass().getComponentType(), size);
-        Iterator<E> it = iterator();
+                  .newInstance(a.getClass().getComponentType(), size); // 给定数组容量不够, 用评估的size新创建指定类型的数组
+        Iterator<E> it = iterator(); // 获取集合迭代器
 
-        for (int i = 0; i < r.length; i++) {
-            if (! it.hasNext()) { // fewer elements than expected
-                if (a == r) {
-                    r[i] = null; // null-terminate
-                } else if (a.length < i) {
-                    return Arrays.copyOf(r, i);
-                } else {
+        for (int i = 0; i < r.length; i++) { // 遍历数组每一个位置
+            if (! it.hasNext()) { // fewer elements than expected 如果实际元素数量比数组预估长度少
+                if (a == r) { // 如果当前数组就是给定数组, 实际元素比给定数组长度少
+                    r[i] = null; // null-terminate 将数组多余部分全设置为null, 即空结束
+                } else if (a.length < i) { // 给定数组a长度小于当前下标
+                    return Arrays.copyOf(r, i); // 复制一个新的数组, 去除数组r多余位置
+                } else { // 给定数组a长度大于当前元素下标, 将新数组r元素赋值给给定数组a. 因为177行时数组a长度的确小于元素size, 出现此处a.length>=i是可能因为并发操作减少了元素
                     System.arraycopy(r, 0, a, 0, i);
-                    if (a.length > i) {
+                    if (a.length > i) { // 将给定数组a剩余位置置为null
                         a[i] = null;
                     }
                 }
                 return a;
             }
-            r[i] = (T)it.next();
+            r[i] = (T)it.next(); // 将元素按顺序放入数组
         }
         // more elements than expected
-        return it.hasNext() ? finishToArray(r, it) : r;
+        return it.hasNext() ? finishToArray(r, it) : r; // 实际元素数量比预期数量多, 调用finishToArray, 否则返回数组r
     }
 
     /**
@@ -204,7 +204,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * Some VMs reserve some header words in an array.
      * Attempts to allocate larger arrays may result in
      * OutOfMemoryError: Requested array size exceeds VM limit
-     */
+     */ /** 数组最大长度限制为{@link Integer#MAX_VALUE}, 不过某些虚拟机实现数组保留了几个位置存储数组头信息, 所以此处设置集合中转换数组最大长度为{@link Integer#MAX_VALUE}-8 */
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
     /**
@@ -216,35 +216,35 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @param it the in-progress iterator over this collection
      * @return array containing the elements in the given array, plus any
      *         further elements returned by the iterator, trimmed to size
-     */
+     */ // 重新分配数组长度, 返回装有迭代器所有元素的数组. 此方法用于被toArray方法中预估的数组size比实际元素数量小的时候调用
     @SuppressWarnings("unchecked")
     private static <T> T[] finishToArray(T[] r, Iterator<?> it) {
-        int i = r.length;
-        while (it.hasNext()) {
-            int cap = r.length;
-            if (i == cap) {
-                int newCap = cap + (cap >> 1) + 1;
-                // overflow-conscious code
+        int i = r.length; // 得到旧的数组长度
+        while (it.hasNext()) { // 遍历迭代器中剩余元素
+            int cap = r.length; // cap为当前数组r的长度, 数组r会随着扩容改变
+            if (i == cap) { // 遍历过程中当前元素下标已经等于当前数组长度, 需要扩容, 执行下方扩容逻辑
+                int newCap = cap + (cap >> 1) + 1; // 扩容后的数组长度, 初步设置为newCap = oldCap + oldCap/2 + 1
+                // overflow-conscious code 数组扩容后是否超出数组支持的最大长度MAX_ARRAY_SIZE
                 if (newCap - MAX_ARRAY_SIZE > 0)
-                    newCap = hugeCapacity(cap + 1);
-                r = Arrays.copyOf(r, newCap);
+                    newCap = hugeCapacity(cap + 1); // 超出数组最大长度但是没超过Integer.Max_VALUE时返回Integer.MAX_VALUE, 否则抛出异常
+                r = Arrays.copyOf(r, newCap); // 将扩容前数组复制到一个长度为扩容后的尺寸的数组, 扩容后数组代替扩容前数组, 继续遍历设置元素
             }
-            r[i++] = (T)it.next();
+            r[i++] = (T)it.next(); // 将迭代器中元素依次放入数组, 然后将i自增, 得到下一个元素在数组中对应的下标
         }
         // trim if overallocated
-        return (i == r.length) ? r : Arrays.copyOf(r, i);
+        return (i == r.length) ? r : Arrays.copyOf(r, i); // 实际元素数量等于当前数组长度时直接返回数组, 否则实际元素数量小于数组长度, 将数组多余长度去除后返回
     }
-
+    // 判断扩容后的数组容量是否溢出和合法
     private static int hugeCapacity(int minCapacity) {
-        if (minCapacity < 0) // overflow
+        if (minCapacity < 0) // overflow 溢出抛出异常
             throw new OutOfMemoryError
                 ("Required array size too large");
         return (minCapacity > MAX_ARRAY_SIZE) ?
-            Integer.MAX_VALUE :
-            MAX_ARRAY_SIZE;
+            Integer.MAX_VALUE : // 超过了MAX_ARRAY_SIZE返回Integer.MAX_VALUE
+            MAX_ARRAY_SIZE; // 否则返回MAX_ARRAY_SIZE
     }
 
-    // Modification Operations
+    // Modification Operations 修改操作
 
     /**
      * {@inheritDoc}
@@ -257,7 +257,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IllegalStateException         {@inheritDoc}
-     */
+     */ // 添加元素到当前集合, 需要具体子类实现
     public boolean add(E e) {
         throw new UnsupportedOperationException();
     }
@@ -277,17 +277,17 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws ClassCastException            {@inheritDoc}
      * @throws NullPointerException          {@inheritDoc}
-     */
+     */ // 从当前集合中移除指定元素, 此方法默认是通过迭代器来寻找和移除元素的, 具体子类可以有更高效的逻辑覆写
     public boolean remove(Object o) {
-        Iterator<E> it = iterator();
-        if (o==null) {
+        Iterator<E> it = iterator(); // 获得集合迭代器
+        if (o==null) { // 指定元素为null时, 迭代器遍历寻找第一个null元素并移除
             while (it.hasNext()) {
                 if (it.next()==null) {
                     it.remove();
                     return true;
                 }
             }
-        } else {
+        } else { // 指定元素不为null时, 迭代器寻找第一个与指定元素相等的元素并移除
             while (it.hasNext()) {
                 if (o.equals(it.next())) {
                     it.remove();
@@ -299,7 +299,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
     }
 
 
-    // Bulk Operations
+    // Bulk Operations 批量操作
 
     /**
      * {@inheritDoc}
@@ -312,12 +312,12 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @throws ClassCastException            {@inheritDoc}
      * @throws NullPointerException          {@inheritDoc}
      * @see #contains(Object)
-     */
+     */ /** 判断当前集合是否包含给定集合所有元素, 通过判断给定集合中的元素是否都被{@link #contains(Object)}返回true实现 */
     public boolean containsAll(Collection<?> c) {
-        for (Object e : c)
-            if (!contains(e))
+        for (Object e : c) // 遍历给定集合的每一个元素
+            if (!contains(e)) // 如果有一个元素是不存在于当前集合的, 就返回false
                 return false;
-        return true;
+        return true; // 所有元素都存在于当前集合, 返回true
     }
 
     /**
@@ -337,13 +337,13 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * @throws IllegalStateException         {@inheritDoc}
      *
      * @see #add(Object)
-     */
+     */ /** 将给定集合所有元素添加到当前集合. 通过循环调用{@link #add(Object)}实现 */
     public boolean addAll(Collection<? extends E> c) {
         boolean modified = false;
-        for (E e : c)
-            if (add(e))
-                modified = true;
-        return modified;
+        for (E e : c) // 遍历给定集合每一个元素
+            if (add(e)) // 将遍历的元素添加到当前集合
+                modified = true; // 成功添加至少一次后改变修改标识
+        return modified; // 返回修改标识
     }
 
     /**
@@ -366,18 +366,18 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      *
      * @see #remove(Object)
      * @see #contains(Object)
-     */
+     */ // 将当前集合中所有与给定集合相等的元素移除, 通过迭代器实现
     public boolean removeAll(Collection<?> c) {
         Objects.requireNonNull(c);
         boolean modified = false;
-        Iterator<?> it = iterator();
-        while (it.hasNext()) {
-            if (c.contains(it.next())) {
-                it.remove();
-                modified = true;
+        Iterator<?> it = iterator(); // 获取集合迭代器
+        while (it.hasNext()) { // 遍历当前集合每一个元素
+            if (c.contains(it.next())) { // 判断遍历到的元素是否存在于给定参数集合中
+                it.remove(); // 如果存在就移除此元素
+                modified = true; // 成功移除至少一次后改变修改标识
             }
         }
-        return modified;
+        return modified; // 返回修改标识
     }
 
     /**
@@ -400,18 +400,18 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      *
      * @see #remove(Object)
      * @see #contains(Object)
-     */
+     */ // 将当前集合与给定集合不同的元素移除, 求当前集合与给定集合的交集
     public boolean retainAll(Collection<?> c) {
         Objects.requireNonNull(c);
         boolean modified = false;
-        Iterator<E> it = iterator();
-        while (it.hasNext()) {
-            if (!c.contains(it.next())) {
-                it.remove();
-                modified = true;
+        Iterator<E> it = iterator(); // 获取集合迭代器
+        while (it.hasNext()) { // 遍历当前集合每一个元素
+            if (!c.contains(it.next())) { // 如果给定集合不包含当前元素
+                it.remove(); // 将其移除
+                modified = true; // 成功移除至少一次后改变修改标识
             }
         }
-        return modified;
+        return modified; // 返回修改标识
     }
 
     /**
@@ -428,7 +428,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * <tt>remove</tt> method and this collection is non-empty.
      *
      * @throws UnsupportedOperationException {@inheritDoc}
-     */
+     */ // 清空当前集合, 通过迭代器遍历移除实现
     public void clear() {
         Iterator<E> it = iterator();
         while (it.hasNext()) {
@@ -449,7 +449,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
      * by {@link String#valueOf(Object)}.
      *
      * @return a string representation of this collection
-     */
+     */ // 默认的转换字符串实现
     public String toString() {
         Iterator<E> it = iterator();
         if (! it.hasNext())
