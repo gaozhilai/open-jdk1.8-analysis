@@ -66,14 +66,14 @@ package java.util;
  * @see     TreeMap
  * @see     AbstractList
  * @since   1.2
- */
-public class ConcurrentModificationException extends RuntimeException {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/10 17:46
+public class ConcurrentModificationException extends RuntimeException { // 并发修改异常, 由不支持并发操作的方法在检测到并发修改后抛出
     private static final long serialVersionUID = -3666751008965953603L;
 
     /**
      * Constructs a ConcurrentModificationException with no
      * detail message.
-     */
+     */ // 无详细信息的构造器
     public ConcurrentModificationException() {
     }
 
@@ -82,7 +82,7 @@ public class ConcurrentModificationException extends RuntimeException {
      * specified detail message.
      *
      * @param message the detail message pertaining to this exception.
-     */
+     */ // 有详细信息的构造器
     public ConcurrentModificationException(String message) {
         super(message);
     }
@@ -97,7 +97,7 @@ public class ConcurrentModificationException extends RuntimeException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      * @since  1.7
-     */
+     */ // 指定Throwable参数的构造器, 参数中包含了异常栈, 可能包含了详细说明信息
     public ConcurrentModificationException(Throwable cause) {
         super(cause);
     }
@@ -117,7 +117,7 @@ public class ConcurrentModificationException extends RuntimeException {
      *         is permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      * @since 1.7
-     */
+     */ // 指定Throwable参数和详细说明信息的构造器
     public ConcurrentModificationException(String message, Throwable cause) {
         super(message, cause);
     }

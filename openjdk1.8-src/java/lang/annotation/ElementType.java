@@ -69,43 +69,43 @@ package java.lang.annotation;
  * @since 1.5
  * @jls 9.6.4.1 @Target
  * @jls 4.1 The Kinds of Types and Values
- */
-public enum ElementType {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/11 10:22
+public enum ElementType { /** 定义注解时, 将此枚举值作为{@link Target}元注解参数, 标记被标记的注解可以注解的位置 */
     /** Class, interface (including annotation type), or enum declaration */
-    TYPE,
+    TYPE, // 标记注解可以用到类, 接口(包括注解), 或者枚举类声明上
 
     /** Field declaration (includes enum constants) */
-    FIELD,
+    FIELD, // 标记注解可以用在变量声明上, 包含枚举实例变量
 
     /** Method declaration */
-    METHOD,
+    METHOD, // 标记注解可以用在方法上
 
     /** Formal parameter declaration */
-    PARAMETER,
+    PARAMETER, // 标记注解可以用在形参上
 
     /** Constructor declaration */
-    CONSTRUCTOR,
+    CONSTRUCTOR, // 标记注解可以用在构造方法上
 
     /** Local variable declaration */
-    LOCAL_VARIABLE,
+    LOCAL_VARIABLE, // 标记注解可以用在局部变量上
 
     /** Annotation type declaration */
-    ANNOTATION_TYPE,
+    ANNOTATION_TYPE, // 标记注解可以用在注解上
 
     /** Package declaration */
-    PACKAGE,
+    PACKAGE, // 标记注解可以用在包声明上, 此注解用的比较少, 主流IDE不支持可能会报错, 注解信息还要包含在package-info.java中, 不推荐使用.
 
     /**
      * Type parameter declaration
      *
      * @since 1.8
      */
-    TYPE_PARAMETER,
+    TYPE_PARAMETER, // 标记注解可以用在泛型参数上
 
     /**
      * Use of a type
      *
      * @since 1.8
      */
-    TYPE_USE
+    TYPE_USE // 标记注解可以用在任意类型上, 包含接口, 类, 泛型参数, 局部变量, 形参, 成员变量, 返回类型上等
 }

@@ -67,12 +67,12 @@ package java.util;
  * @author  Neal Gafter
  * @since 1.2
  */
-
-public abstract class AbstractList<E> extends AbstractCollection<E> implements List<E> {
+ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/9 17:36
+public abstract class AbstractList<E> extends AbstractCollection<E> implements List<E> { // AbstractList抽象类为具体的List实现类提供了骨架方法实现, 减轻了实现类的代价
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
      * implicit.)
-     */
+     */ // protected构造器, 只能被子类调用
     protected AbstractList() {
     }
 
@@ -103,9 +103,9 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *         list does not permit null elements
      * @throws IllegalArgumentException if some property of this element
      *         prevents it from being added to this list
-     */
+     */ // 在当前序列末尾添加指定元素
     public boolean add(E e) {
-        add(size(), e);
+        add(size(), e); // 这个add方法是在指定位置放入元素, size()返回了当前已有元素数量, 刚好也是要新增的当前序列最后一个元素的下标
         return true;
     }
 
@@ -113,7 +113,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * {@inheritDoc}
      *
      * @throws IndexOutOfBoundsException {@inheritDoc}
-     */
+     */ // 获取指定下标的元素
     abstract public E get(int index);
 
     /**
@@ -127,7 +127,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
-     */
+     */ // 设置指定下标为指定元素
     public E set(int index, E element) {
         throw new UnsupportedOperationException();
     }
@@ -143,7 +143,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
-     */
+     */ // 在规定位置index添加给定元素element, 如果index处已经存在元素, 那么将其以及其后面的元素右移
     public void add(int index, E element) {
         throw new UnsupportedOperationException();
     }
@@ -156,13 +156,13 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
-     */
+     */ // 将给定index位置的元素从当前序列中移除, 如果index后方有元素那么将他们左移
     public E remove(int index) {
         throw new UnsupportedOperationException();
     }
 
 
-    // Search Operations
+    // Search Operations 查找操作
 
     /**
      * {@inheritDoc}
@@ -173,15 +173,15 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *
      * @throws ClassCastException   {@inheritDoc}
      * @throws NullPointerException {@inheritDoc}
-     */
+     */ // 返回当前序列中给定元素o的位置, 从前往后查找, 如果存在多个返回第一个最小的index, 如果不存在返回-1
     public int indexOf(Object o) {
-        ListIterator<E> it = listIterator();
+        ListIterator<E> it = listIterator(); // 获得序列迭代器ListIterator
         if (o==null) {
-            while (it.hasNext())
+            while (it.hasNext()) // 遍历每一个元素, 直到找到指定元素并返回
                 if (it.next()==null)
                     return it.previousIndex();
         } else {
-            while (it.hasNext())
+            while (it.hasNext()) // 遍历元素, 直到找到指定元素并返回
                 if (o.equals(it.next()))
                     return it.previousIndex();
         }
@@ -198,15 +198,15 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *
      * @throws ClassCastException   {@inheritDoc}
      * @throws NullPointerException {@inheritDoc}
-     */
+     */ // 返回当前序列中给定元素o的位置, 从后往前查找, 如果存在多个返回最后一个最大的index, 如果不存在返回-1
     public int lastIndexOf(Object o) {
-        ListIterator<E> it = listIterator(size());
+        ListIterator<E> it = listIterator(size()); // 获得当前序列迭代器, 指定迭代器位置在序列尾部
         if (o==null) {
-            while (it.hasPrevious())
+            while (it.hasPrevious()) // 从后往前遍历元素, 直到找到指定元素并返回
                 if (it.previous()==null)
                     return it.nextIndex();
         } else {
-            while (it.hasPrevious())
+            while (it.hasPrevious()) // 从后往前遍历元素, 直到找到指定元素并返回
                 if (o.equals(it.previous()))
                     return it.nextIndex();
         }
@@ -214,7 +214,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
     }
 
 
-    // Bulk Operations
+    // Bulk Operations 批量操作
 
     /**
      * Removes all of the elements from this list (optional operation).
@@ -229,7 +229,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *
      * @throws UnsupportedOperationException if the {@code clear} operation
      *         is not supported by this list
-     */
+     */ /** 清空当前集合, 调用{@link #removeRange(int, int)}通过迭代器遍历移除实现 */
     public void clear() {
         removeRange(0, size());
     }
@@ -252,19 +252,19 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
-     */
+     */ // 将给定集合的元素依次添加到当前序列指定index处, 添加顺序取决于给定集合返回的迭代器. 如果给定index已经存在元素, 那么将其以及其随后的元素右移
     public boolean addAll(int index, Collection<? extends E> c) {
-        rangeCheckForAdd(index);
+        rangeCheckForAdd(index); // 检查index合法性, 不能超过当前已有元素下标
         boolean modified = false;
-        for (E e : c) {
-            add(index++, e);
-            modified = true;
+        for (E e : c) { // 遍历要添加的集合的每一个元素
+            add(index++, e); // 调用add方法向指定下标添加元素, 并将原有元素整体右移
+            modified = true; // 有添加成功将修改标记设为真
         }
-        return modified;
+        return modified; // 返回修改状态
     }
 
 
-    // Iterators
+    // Iterators 迭代器相关
 
     /**
      * Returns an iterator over the elements in this list in proper sequence.
@@ -283,7 +283,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * for the (protected) {@link #modCount} field.
      *
      * @return an iterator over the elements in this list in proper sequence
-     */
+     */ /** 返回一个只能向前遍历的迭代器, 这个迭代器直接实现了{@link Iterator}接口 */
     public Iterator<E> iterator() {
         return new Itr();
     }
@@ -294,7 +294,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * <p>This implementation returns {@code listIterator(0)}.
      *
      * @see #listIterator(int)
-     */
+     */ // 返回一个ListIterator迭代器, 这个迭代器在普通迭代器基础上还支持往前遍历
     public ListIterator<E> listIterator() {
         return listIterator(0);
     }
@@ -320,125 +320,125 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * the (protected) {@link #modCount} field.
      *
      * @throws IndexOutOfBoundsException {@inheritDoc}
-     */
+     */ // 返回一个指定了迭代器初始默认位置的ListIterator迭代器
     public ListIterator<E> listIterator(final int index) {
         rangeCheckForAdd(index);
 
         return new ListItr(index);
     }
-
+    /** 当前序列基本的迭代器, 直接实现了{@link Iterator}接口 */
     private class Itr implements Iterator<E> {
         /**
          * Index of element to be returned by subsequent call to next.
          */
-        int cursor = 0;
+        int cursor = 0; // 游标, 标记了下一次调用next方法应该返回的元素的位置
 
         /**
          * Index of element returned by most recent call to next or
          * previous.  Reset to -1 if this element is deleted by a call
          * to remove.
          */
-        int lastRet = -1;
+        int lastRet = -1; // last return, 最近一次调用next或者previous方法返回的元素的下标
 
         /**
          * The modCount value that the iterator believes that the backing
          * List should have.  If this expectation is violated, the iterator
          * has detected concurrent modification.
-         */
+         */ // 当前迭代器认为其基于的序列当前的操作数, 用于校验是否被并发修改, 如果对应迭代器操作不支持并发修改可以抛出异常, 实现快速失败fast-fail
         int expectedModCount = modCount;
-
+        // 判断当前迭代器是否还存在下一个元素
         public boolean hasNext() {
-            return cursor != size();
+            return cursor != size(); // 当前游标位置如果等于已有元素数量, 那么当前lastRet位置已经在序列尾部, 不存在下一个元素, 返回false
         }
-
+        // 返回当前迭代器下一个元素
         public E next() {
-            checkForComodification();
+            checkForComodification(); // 检测在当前迭代器迭代过程中是否被并发修改, 如果被修改抛出异常
             try {
-                int i = cursor;
+                int i = cursor; // 获得当前要返回的元素下标
                 E next = get(i);
                 lastRet = i;
-                cursor = i + 1;
-                return next;
+                cursor = i + 1; // cursor代表下一次访问的元素下标, 本次已经使用过, 将游标自增一
+                return next; // 返回找到的元素
             } catch (IndexOutOfBoundsException e) {
                 checkForComodification();
                 throw new NoSuchElementException();
             }
         }
-
+        /** 将迭代器当前最后一个返回的元素从底层数组中移除, 此方法只能在每次{@link #next()}方法调用后调用一次 */
         public void remove() {
-            if (lastRet < 0)
+            if (lastRet < 0) // 后面移除元素后会将lastRet, 也就是最近一次返回元素的下标置为-1, 如果没有调用next重复调用此remove方法就抛出异常
                 throw new IllegalStateException();
-            checkForComodification();
+            checkForComodification(); // 检查被并发操作抛出异常
 
             try {
-                AbstractList.this.remove(lastRet);
-                if (lastRet < cursor)
-                    cursor--;
-                lastRet = -1;
+                AbstractList.this.remove(lastRet); // 移除上一次返回元素
+                if (lastRet < cursor) // 这个remove方法也被ListItr继承使用, 当其调用previous后, cursor == lastRet, 本次remove导致的cursor变动由对应的previous维护
+                    cursor--; // cursor代表了下次返回的元素, 上次返回的元素已经移除, 右侧元素整体向左移动一格, 所以cursor也要减一
+                lastRet = -1; // 上次返回的元素已经不存在, 将lastRet设置为-1, 标记在不调用next或者ListItr中的previous并且重复调用此方法时需要抛出异常
                 expectedModCount = modCount;
             } catch (IndexOutOfBoundsException e) {
                 throw new ConcurrentModificationException();
             }
         }
-
+        /** 检查迭代过程中当前序列被并发修改过就抛出异常{@link ConcurrentModificationException} */
         final void checkForComodification() {
             if (modCount != expectedModCount)
                 throw new ConcurrentModificationException();
         }
     }
-
+    // 序列特有的迭代器, 在基础的迭代器之上额外支持向前遍历
     private class ListItr extends Itr implements ListIterator<E> {
-        ListItr(int index) {
+        ListItr(int index) { // 构造序列迭代器时支持指定默认元素(第一次调用next方法返回的元素)位置
             cursor = index;
         }
-
+        // 判断当前迭代器是否还有前一个元素
         public boolean hasPrevious() {
             return cursor != 0;
         }
-
+        // 返回当前迭代器前一个元素
         public E previous() {
-            checkForComodification();
+            checkForComodification(); // 检测如果被并发修改抛出异常
             try {
-                int i = cursor - 1;
-                E previous = get(i);
-                lastRet = cursor = i;
-                return previous;
+                int i = cursor - 1; // 获得调用next时本该返回的cursor位置, 并减一得到其前一个元素位置
+                E previous = get(i); // 获得要返回的元素
+                lastRet = cursor = i; // 将lastRet与cursor都设置为本次返回元素的下标位置
+                return previous; // 返回元素
             } catch (IndexOutOfBoundsException e) {
-                checkForComodification();
-                throw new NoSuchElementException();
+                checkForComodification(); // 如果有越界异常检测是否被并发修改
+                throw new NoSuchElementException(); // 没有被并发修改过则抛出无此元素异常
             }
         }
-
+        // 返回下一个元素的下标
         public int nextIndex() {
             return cursor;
         }
-
+        // 返回上一个元素的下标, 即cursor的上一个
         public int previousIndex() {
             return cursor-1;
         }
-
+        // 将上一次返回的元素用指定元素替换
         public void set(E e) {
-            if (lastRet < 0)
+            if (lastRet < 0) // lastRet小于0可能是因为调用了remove方法, 右侧元素统一左移, 抛出异常, 避免调用者覆盖了不应该覆盖的元素
                 throw new IllegalStateException();
-            checkForComodification();
+            checkForComodification(); // 检查如果被并发修改则抛出异常
 
             try {
-                AbstractList.this.set(lastRet, e);
-                expectedModCount = modCount;
+                AbstractList.this.set(lastRet, e); // 将上次返回元素用指定元素覆盖
+                expectedModCount = modCount; // 更新操作次数
             } catch (IndexOutOfBoundsException ex) {
                 throw new ConcurrentModificationException();
             }
         }
-
+        // 将指定元素插入到下一个要返回的元素位置, 如果这个位置已经存在元素, 将他们统一向右移
         public void add(E e) {
-            checkForComodification();
+            checkForComodification(); // 检测如果被并发修改抛出异常
 
             try {
-                int i = cursor;
-                AbstractList.this.add(i, e);
-                lastRet = -1;
-                cursor = i + 1;
-                expectedModCount = modCount;
+                int i = cursor; // 确定元素插入位置
+                AbstractList.this.add(i, e); // 将元素插入cursor即下一次next方法要返回的位置
+                lastRet = -1; // 将上一次返回元素位置设为-1, 防止被remove等其他操作继续操作
+                cursor = i + 1; // 由于原先以及原先位置右侧的元素统一向右移动一个位置, 所以得到新的cursor位置
+                expectedModCount = modCount; // 修改操作数
             } catch (IndexOutOfBoundsException ex) {
                 throw new ConcurrentModificationException();
             }
@@ -479,14 +479,14 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *         {@code (fromIndex < 0 || toIndex > size)}
      * @throws IllegalArgumentException if the endpoint indices are out of order
      *         {@code (fromIndex > toIndex)}
-     */
-    public List<E> subList(int fromIndex, int toIndex) {
-        return (this instanceof RandomAccess ?
-                new RandomAccessSubList<>(this, fromIndex, toIndex) :
-                new SubList<>(this, fromIndex, toIndex));
+     */ // 返回一个基于原始序列的范围为左闭右开[fromIndex, toIndex)(如果fromIndex==toIndex返回空序列)的子序列, 子序列与原始序列对元素的变动会互相影响
+    public List<E> subList(int fromIndex, int toIndex) { // 如果子序列有结构性改变, 那么会抛出异常
+        return (this instanceof RandomAccess ? // 如果当前序列实现类支持高效的随机访问
+                new RandomAccessSubList<>(this, fromIndex, toIndex) : // 返回支持随机访问的子序列
+                new SubList<>(this, fromIndex, toIndex)); // 返回没有随机标记的子序列
     }
 
-    // Comparison and hashing
+    // Comparison and hashing 比较和哈希相关方法
 
     /**
      * Compares the specified object with this list for equality.  Returns
@@ -508,22 +508,22 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *
      * @param o the object to be compared for equality with this list
      * @return {@code true} if the specified object is equal to this list
-     */
+     */ // 判断两个序列是否相等, 如果两个序列包含相同元素并且元素顺序相同视为两个序列相等
     public boolean equals(Object o) {
-        if (o == this)
+        if (o == this) // 如果要比较对象就是当前序列, 返回true
             return true;
-        if (!(o instanceof List))
+        if (!(o instanceof List)) // 如果要比较对象都不是序列类型, 那么直接返回false
             return false;
 
-        ListIterator<E> e1 = listIterator();
-        ListIterator<?> e2 = ((List<?>) o).listIterator();
-        while (e1.hasNext() && e2.hasNext()) {
+        ListIterator<E> e1 = listIterator(); // 获得当前序列自身的序列迭代器
+        ListIterator<?> e2 = ((List<?>) o).listIterator(); // 获取要比较的对象的序列迭代器
+        while (e1.hasNext() && e2.hasNext()) { // 遍历两个序列的元素
             E o1 = e1.next();
             Object o2 = e2.next();
-            if (!(o1==null ? o2==null : o1.equals(o2)))
+            if (!(o1==null ? o2==null : o1.equals(o2))) // 如果某次遍历两个元素不等返回false
                 return false;
         }
-        return !(e1.hasNext() || e2.hasNext());
+        return !(e1.hasNext() || e2.hasNext()); // 两个序列包含元素一致, 且顺序相同, 视为相等, 返回true
     }
 
     /**
@@ -534,7 +534,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * method.
      *
      * @return the hash code value for this list
-     */
+     */ // 返回当前序列的hashCode, 此值通过当前序列包含的每一个元素的hashCode计算来实现
     public int hashCode() {
         int hashCode = 1;
         for (E e : this)
@@ -563,10 +563,10 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      *
      * @param fromIndex index of first element to be removed
      * @param toIndex index after last element to be removed
-     */
+     */ // 移除指定下标范围[fromIndex, toIndex)的元素, 通过序列迭代器实现
     protected void removeRange(int fromIndex, int toIndex) {
-        ListIterator<E> it = listIterator(fromIndex);
-        for (int i=0, n=toIndex-fromIndex; i<n; i++) {
+        ListIterator<E> it = listIterator(fromIndex); // 获得指定默认位置的序列迭代器
+        for (int i=0, n=toIndex-fromIndex; i<n; i++) { // 遍历到指定toIndex范围, 将遍历到的元素移除
             it.next();
             it.remove();
         }
@@ -597,25 +597,25 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * bogus {@code ConcurrentModificationExceptions}.  If an implementation
      * does not wish to provide fail-fast iterators, this field may be
      * ignored.
-     */
+     */ // 标记当前序列操作数, 用于检测是否被并发修改
     protected transient int modCount = 0;
-
+    // 检测新增元素时指定下标是否合法
     private void rangeCheckForAdd(int index) {
-        if (index < 0 || index > size())
+        if (index < 0 || index > size()) // 如果指定下标小于0或大于当前序列最后一个元素下标, 抛出越界异常
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
-
+    // 构建越界报错信息
     private String outOfBoundsMsg(int index) {
         return "Index: "+index+", Size: "+size();
     }
 }
-
+// 子序列, 基于真实序列的数据视图
 class SubList<E> extends AbstractList<E> {
-    private final AbstractList<E> l;
-    private final int offset;
-    private int size;
-
-    SubList(AbstractList<E> list, int fromIndex, int toIndex) {
+    private final AbstractList<E> l; // 子序列基于的真实序列
+    private final int offset; // 偏移量
+    private int size; // 自序列包含的元素数量
+    // 构造基于原始序列的范围为左闭右开[fromIndex, toIndex)(如果fromIndex==toIndex返回空序列)的子序列, 子序列与原始序列对元素的变动会互相影响
+    SubList(AbstractList<E> list, int fromIndex, int toIndex) { // 子序列构造方法,
         if (fromIndex < 0)
             throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
         if (toIndex > list.size())
@@ -628,24 +628,24 @@ class SubList<E> extends AbstractList<E> {
         size = toIndex - fromIndex;
         this.modCount = l.modCount;
     }
-
+    // 设置指定下标为指定元素, 真正添加逻辑指向其基于的真实的序列
     public E set(int index, E element) {
         rangeCheck(index);
         checkForComodification();
         return l.set(index+offset, element);
     }
-
+    // 获取指定下标的元素
     public E get(int index) {
         rangeCheck(index);
         checkForComodification();
         return l.get(index+offset);
     }
-
+    // 返回当前集合包含元素数量, 包含数量大于int最大值则返回int最大值
     public int size() {
         checkForComodification();
         return size;
     }
-
+    // 在规定位置index添加给定元素element, 如果index处已经存在元素, 那么将其以及其后面的元素右移
     public void add(int index, E element) {
         rangeCheckForAdd(index);
         checkForComodification();
@@ -653,7 +653,7 @@ class SubList<E> extends AbstractList<E> {
         this.modCount = l.modCount;
         size++;
     }
-
+    // 将给定index位置的元素从当前序列中移除, 如果index后方有元素那么将他们左移
     public E remove(int index) {
         rangeCheck(index);
         checkForComodification();
@@ -662,18 +662,18 @@ class SubList<E> extends AbstractList<E> {
         size--;
         return result;
     }
-
+    // 移除指定下标范围[fromIndex, toIndex)的元素, 通过序列迭代器实现
     protected void removeRange(int fromIndex, int toIndex) {
         checkForComodification();
         l.removeRange(fromIndex+offset, toIndex+offset);
         this.modCount = l.modCount;
         size -= (toIndex-fromIndex);
     }
-
+    // 将给定集合的元素依次添加到当前序列尾部, 添加顺序取决于给定集合返回的迭代器
     public boolean addAll(Collection<? extends E> c) {
         return addAll(size, c);
     }
-
+    // 将给定集合的元素依次添加到当前序列指定index处, 添加顺序取决于给定集合返回的迭代器. 如果给定index已经存在元素, 那么将其以及其随后的元素右移
     public boolean addAll(int index, Collection<? extends E> c) {
         rangeCheckForAdd(index);
         int cSize = c.size();
@@ -686,16 +686,16 @@ class SubList<E> extends AbstractList<E> {
         size += cSize;
         return true;
     }
-
+    // 返回当前子序列迭代器
     public Iterator<E> iterator() {
         return listIterator();
     }
-
+    // 返回一个指定了迭代器初始默认位置的ListIterator迭代器
     public ListIterator<E> listIterator(final int index) {
         checkForComodification();
         rangeCheckForAdd(index);
 
-        return new ListIterator<E>() {
+        return new ListIterator<E>() { // 返回当前子序列迭代器实现类的对象
             private final ListIterator<E> i = l.listIterator(index+offset);
 
             public boolean hasNext() {
@@ -745,31 +745,31 @@ class SubList<E> extends AbstractList<E> {
             }
         };
     }
-
+    // 返回基于子序列的子序列, 基于原始序列的范围为左闭右开[fromIndex, toIndex)(如果fromIndex==toIndex返回空序列)的子序列, 子序列与原始序列对元素的变动会互相影响
     public List<E> subList(int fromIndex, int toIndex) {
         return new SubList<>(this, fromIndex, toIndex);
     }
-
+    // 检测下标是否越界
     private void rangeCheck(int index) {
         if (index < 0 || index >= size)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
-
+    // 检测添加元素时下标是否越界
     private void rangeCheckForAdd(int index) {
         if (index < 0 || index > size)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
-
+    // 构建下标越界报错信息
     private String outOfBoundsMsg(int index) {
         return "Index: "+index+", Size: "+size;
     }
-
+    // 检测被并发修改抛出异常
     private void checkForComodification() {
         if (this.modCount != l.modCount)
             throw new ConcurrentModificationException();
     }
 }
-
+// 有随机访问标记的子序列实现类
 class RandomAccessSubList<E> extends SubList<E> implements RandomAccess {
     RandomAccessSubList(AbstractList<E> list, int fromIndex, int toIndex) {
         super(list, fromIndex, toIndex);
