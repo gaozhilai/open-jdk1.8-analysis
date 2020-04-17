@@ -47,8 +47,8 @@ package java.lang;
  *
  * @author Josh Bloch
  * @since 1.7
- */
-public interface AutoCloseable {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/14 17:24
+public interface AutoCloseable { // 实现了AutoCloaseable接口的类表明了自己持有的资源可以通过try-with-resources语法糖自动释放
     /**
      * Closes this resource, relinquishing any underlying resources.
      * This method is invoked automatically on objects managed by the
@@ -93,6 +93,6 @@ public interface AutoCloseable {
      * to make their {@code close} methods idempotent.
      *
      * @throws Exception if this resource cannot be closed
-     */
+     */ // 资源关闭方法, 此接口实现类用try-with-resources方式声明时, 会自动调用此方法释放资源
     void close() throws Exception;
 }

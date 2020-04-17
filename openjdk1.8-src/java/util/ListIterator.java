@@ -56,9 +56,9 @@ package java.util;
  * @see Enumeration
  * @see List#listIterator()
  * @since   1.2
- */
-public interface ListIterator<E> extends Iterator<E> {
-    // Query Operations
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/13 10:00
+public interface ListIterator<E> extends Iterator<E> { // 序列迭代器, 在普通迭代器基础上增加了向前遍历等能力
+    // Query Operations 查询操作
 
     /**
      * Returns {@code true} if this list iterator has more elements when
@@ -68,7 +68,7 @@ public interface ListIterator<E> extends Iterator<E> {
      *
      * @return {@code true} if the list iterator has more elements when
      *         traversing the list in the forward direction
-     */
+     */ // 如果当前序列迭代器有下一个元素那么返回true
     boolean hasNext();
 
     /**
@@ -80,7 +80,7 @@ public interface ListIterator<E> extends Iterator<E> {
      *
      * @return the next element in the list
      * @throws NoSuchElementException if the iteration has no next element
-     */
+     */ /** 返回下一个元素, 并将游标自增. 注意交替执行{@link #previous}和此方法返回的是同一个元素 */
     E next();
 
     /**
@@ -91,7 +91,7 @@ public interface ListIterator<E> extends Iterator<E> {
      *
      * @return {@code true} if the list iterator has more elements when
      *         traversing the list in the reverse direction
-     */
+     */ // 返回当前序列迭代器是否有前一个元素
     boolean hasPrevious();
 
     /**
@@ -105,7 +105,7 @@ public interface ListIterator<E> extends Iterator<E> {
      * @return the previous element in the list
      * @throws NoSuchElementException if the iteration has no previous
      *         element
-     */
+     */ // 返回前一个元素, 并且减小游标值
     E previous();
 
     /**
@@ -116,7 +116,7 @@ public interface ListIterator<E> extends Iterator<E> {
      * @return the index of the element that would be returned by a
      *         subsequent call to {@code next}, or list size if the list
      *         iterator is at the end of the list
-     */
+     */ /** 返回下一次调用{@link #next}返回元素的下标, 如果当前迭代器已经在序列的尾部, 那么此方法返回当前序列的size */
     int nextIndex();
 
     /**
@@ -127,11 +127,11 @@ public interface ListIterator<E> extends Iterator<E> {
      * @return the index of the element that would be returned by a
      *         subsequent call to {@code previous}, or -1 if the list
      *         iterator is at the beginning of the list
-     */
+     */ /** 返回下一次调用{@link #previous}返回元素的下标, 如果当前迭代器已经在序列头部, 那么此方法返回-1 */
     int previousIndex();
 
 
-    // Modification Operations
+    // Modification Operations 修改操作
 
     /**
      * Removes from the list the last element that was returned by {@link
@@ -146,7 +146,7 @@ public interface ListIterator<E> extends Iterator<E> {
      *         {@code previous} have been called, or {@code remove} or
      *         {@code add} have been called after the last call to
      *         {@code next} or {@code previous}
-     */
+     */ /** 将迭代器当前最后一个返回的元素从底层数组中移除, 此方法只能在每次{@link #next()}和{@link #previous}方法调用后调用一次 */
     void remove();
 
     /**
@@ -168,7 +168,7 @@ public interface ListIterator<E> extends Iterator<E> {
      *         {@code previous} have been called, or {@code remove} or
      *         {@code add} have been called after the last call to
      *         {@code next} or {@code previous}
-     */
+     */ /** 用指定元素替换掉序列中最近一次{@code previous}或{@code next}方法返回的元素 */
     void set(E e);
 
     /**
@@ -190,6 +190,6 @@ public interface ListIterator<E> extends Iterator<E> {
      *         prevents it from being added to this list
      * @throws IllegalArgumentException if some aspect of this element
      *         prevents it from being added to this list
-     */
+     */ /** 将指定元素插入当前序列下一次调用{@link #next}返回元素前或者下一次调用{@code previous}返回元素之后. 新增元素后对{@link #next}没有影响, 不过立刻调用{@code previous}将返回本次新增的元素 */
     void add(E e);
 }
