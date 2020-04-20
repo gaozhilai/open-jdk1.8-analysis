@@ -40,9 +40,9 @@ import java.util.Objects;
  *
  * @see Consumer
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/20 17:58
 @FunctionalInterface
-public interface BiConsumer<T, U> {
+public interface BiConsumer<T, U> { /** 函数式接口, 代表了接收两个参数无返回结果的消费者. 与{@link Consumer}类似 */
 
     /**
      * Performs this operation on the given arguments.
@@ -63,7 +63,7 @@ public interface BiConsumer<T, U> {
      * @return a composed {@code BiConsumer} that performs in sequence this
      * operation followed by the {@code after} operation
      * @throws NullPointerException if {@code after} is null
-     */
+     */ // 为当前Consumer增加一个额外的Consumer, 可以多次附加, 执行时依次对给定参数执行Consumer逻辑
     default BiConsumer<T, U> andThen(BiConsumer<? super T, ? super U> after) {
         Objects.requireNonNull(after);
 

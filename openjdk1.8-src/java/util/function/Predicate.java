@@ -35,9 +35,9 @@ import java.util.Objects;
  * @param <T> the type of the input to the predicate
  *
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/20 18:20
 @FunctionalInterface
-public interface Predicate<T> {
+public interface Predicate<T> { // 函数式接口, 代表了断言逻辑, 接收一个参数, 返回一个布尔值
 
     /**
      * Evaluates this predicate on the given argument.
@@ -45,7 +45,7 @@ public interface Predicate<T> {
      * @param t the input argument
      * @return {@code true} if the input argument matches the predicate,
      * otherwise {@code false}
-     */
+     */ // 如果断言逻辑为真返回true, 否则返回false
     boolean test(T t);
 
     /**
@@ -63,7 +63,7 @@ public interface Predicate<T> {
      * @return a composed predicate that represents the short-circuiting logical
      * AND of this predicate and the {@code other} predicate
      * @throws NullPointerException if other is null
-     */
+     */ // 在当前断言逻辑之上额外附加一个断言逻辑, 关系为and, 可以附加多个
     default Predicate<T> and(Predicate<? super T> other) {
         Objects.requireNonNull(other);
         return (t) -> test(t) && other.test(t);
@@ -75,7 +75,7 @@ public interface Predicate<T> {
      *
      * @return a predicate that represents the logical negation of this
      * predicate
-     */
+     */ // 将当前断言逻辑取反
     default Predicate<T> negate() {
         return (t) -> !test(t);
     }
@@ -95,7 +95,7 @@ public interface Predicate<T> {
      * @return a composed predicate that represents the short-circuiting logical
      * OR of this predicate and the {@code other} predicate
      * @throws NullPointerException if other is null
-     */
+     */ // 在当前断言逻辑之上额外附加一个断言逻辑, 关系为or, 可以附加多个
     default Predicate<T> or(Predicate<? super T> other) {
         Objects.requireNonNull(other);
         return (t) -> test(t) || other.test(t);
@@ -110,7 +110,7 @@ public interface Predicate<T> {
      *               which may be {@code null}
      * @return a predicate that tests if two arguments are equal according
      * to {@link Objects#equals(Object, Object)}
-     */
+     */ // 用给定对象构建一个相等断言, 即当前构建的断言作用是比较传入的参数是否与当前构建断言传入的参数相等
     static <T> Predicate<T> isEqual(Object targetRef) {
         return (null == targetRef)
                 ? Objects::isNull

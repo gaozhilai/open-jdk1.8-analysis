@@ -41,9 +41,9 @@ import java.util.Comparator;
  * @see BiFunction
  * @see UnaryOperator
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/20 18:12
 @FunctionalInterface
-public interface BinaryOperator<T> extends BiFunction<T,T,T> {
+public interface BinaryOperator<T> extends BiFunction<T,T,T> { /** 函数式接口, 接收两个同类型参数, 返回一个同类型结果. 是{@link BiFunction}的特殊形式 */
     /**
      * Returns a {@link BinaryOperator} which returns the lesser of two elements
      * according to the specified {@code Comparator}.
@@ -53,7 +53,7 @@ public interface BinaryOperator<T> extends BiFunction<T,T,T> {
      * @return a {@code BinaryOperator} which returns the lesser of its operands,
      *         according to the supplied {@code Comparator}
      * @throws NullPointerException if the argument is null
-     */
+     */ // 接口中的静态工具方法, 根据给定的比较器, 返回传递给当前BinaryOperator两个参数中比较小的参数
     public static <T> BinaryOperator<T> minBy(Comparator<? super T> comparator) {
         Objects.requireNonNull(comparator);
         return (a, b) -> comparator.compare(a, b) <= 0 ? a : b;
@@ -68,7 +68,7 @@ public interface BinaryOperator<T> extends BiFunction<T,T,T> {
      * @return a {@code BinaryOperator} which returns the greater of its operands,
      *         according to the supplied {@code Comparator}
      * @throws NullPointerException if the argument is null
-     */
+     */ // 接口中的静态工具方法, 根据给定的比较器, 返回传递给当前BinaryOperator两个参数中比较大的参数
     public static <T> BinaryOperator<T> maxBy(Comparator<? super T> comparator) {
         Objects.requireNonNull(comparator);
         return (a, b) -> comparator.compare(a, b) >= 0 ? a : b;

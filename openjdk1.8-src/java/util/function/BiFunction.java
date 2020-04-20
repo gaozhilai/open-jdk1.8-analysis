@@ -39,9 +39,9 @@ import java.util.Objects;
  *
  * @see Function
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/20 18:05
 @FunctionalInterface
-public interface BiFunction<T, U, R> {
+public interface BiFunction<T, U, R> { // 函数式接口, 代表了接收两个参数, 产生一个结果的函数
 
     /**
      * Applies this function to the given arguments.
@@ -64,7 +64,7 @@ public interface BiFunction<T, U, R> {
      * @return a composed function that first applies this function and then
      * applies the {@code after} function
      * @throws NullPointerException if after is null
-     */
+     */ // 为当前BiFunction增加一个额外的BiFunction, 可以多次附加, 执行时依次对给定参数执行BiFunction逻辑
     default <V> BiFunction<T, U, V> andThen(Function<? super R, ? extends V> after) {
         Objects.requireNonNull(after);
         return (T t, U u) -> after.apply(apply(t, u));

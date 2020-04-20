@@ -37,14 +37,14 @@ package java.util.function;
  *
  * @see Supplier
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/20 20:03
 @FunctionalInterface
-public interface BooleanSupplier {
+public interface BooleanSupplier { /** 函数式接口, 代表布尔值生产者, 逻辑与{@link Supplier}类似 */
 
     /**
      * Gets a result.
      *
      * @return a result
-     */
+     */ // 无参数, 生产一个布尔值
     boolean getAsBoolean();
 }
