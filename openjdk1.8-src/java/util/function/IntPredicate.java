@@ -36,9 +36,9 @@ import java.util.Objects;
  *
  * @see Predicate
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/25 19:08
 @FunctionalInterface
-public interface IntPredicate {
+public interface IntPredicate { /** 函数式接口, 代表一个接收int类型参数的断言, 是{@link Predicate}指定int类型参数的版本 */
 
     /**
      * Evaluates this predicate on the given argument.
@@ -46,7 +46,7 @@ public interface IntPredicate {
      * @param value the input argument
      * @return {@code true} if the input argument matches the predicate,
      * otherwise {@code false}
-     */
+     */ // 执行具体实现类断言逻辑, 接收int参数, 返回布尔结果
     boolean test(int value);
 
     /**
@@ -64,7 +64,7 @@ public interface IntPredicate {
      * @return a composed predicate that represents the short-circuiting logical
      * AND of this predicate and the {@code other} predicate
      * @throws NullPointerException if other is null
-     */
+     */ // 在当前IntPredicate逻辑上额外添加一个IntPredicate, 之间是and关系
     default IntPredicate and(IntPredicate other) {
         Objects.requireNonNull(other);
         return (value) -> test(value) && other.test(value);
@@ -76,7 +76,7 @@ public interface IntPredicate {
      *
      * @return a predicate that represents the logical negation of this
      * predicate
-     */
+     */ // 将当前IntPredicate逻辑取反
     default IntPredicate negate() {
         return (value) -> !test(value);
     }
@@ -96,7 +96,7 @@ public interface IntPredicate {
      * @return a composed predicate that represents the short-circuiting logical
      * OR of this predicate and the {@code other} predicate
      * @throws NullPointerException if other is null
-     */
+     */ // 在当前IntPredicate逻辑上额外附加一个IntPredicate, 之间是or关系
     default IntPredicate or(IntPredicate other) {
         Objects.requireNonNull(other);
         return (value) -> test(value) || other.test(value);

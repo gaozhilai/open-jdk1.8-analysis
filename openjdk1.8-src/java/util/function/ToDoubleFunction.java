@@ -35,15 +35,15 @@ package java.util.function;
  *
  * @see Function
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/25 20:27
 @FunctionalInterface
-public interface ToDoubleFunction<T> {
+public interface ToDoubleFunction<T> { /** 函数式接口, 接收一个T类型参数, 返回一个double结果, 是特殊的{@link Function} */
 
     /**
      * Applies this function to the given argument.
      *
      * @param value the function argument
      * @return the function result
-     */
+     */ // 执行具体实现类逻辑, 接收一个T类型参数, 返回一个double结果
     double applyAsDouble(T value);
 }

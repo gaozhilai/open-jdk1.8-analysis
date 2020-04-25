@@ -34,7 +34,7 @@ package java.util.function;
  *
  * @see Function
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/25 20:07
 @FunctionalInterface
 public interface LongToDoubleFunction {
 
@@ -43,6 +43,6 @@ public interface LongToDoubleFunction {
      *
      * @param value the function argument
      * @return the function result
-     */
+     */ // 执行具体实现类逻辑, 接收一个long参数, 返回一个double结果
     double applyAsDouble(long value);
 }

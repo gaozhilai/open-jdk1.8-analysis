@@ -34,15 +34,15 @@ package java.util.function;
  *
  * @see Function
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/25 18:43
 @FunctionalInterface
-public interface DoubleToIntFunction {
+public interface DoubleToIntFunction { /** 函数式接口, 代表了一个接收double类型参数返回int结果的函数, 是{@link Function}的特定版本 */
 
     /**
      * Applies this function to the given argument.
      *
      * @param value the function argument
      * @return the function result
-     */
+     */ // 执行实现类逻辑, 接收一个double类型参数, 返回int结果
     int applyAsInt(double value);
 }
