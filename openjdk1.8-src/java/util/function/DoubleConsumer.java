@@ -37,15 +37,15 @@ import java.util.Objects;
  *
  * @see Consumer
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/20 20:33
 @FunctionalInterface
-public interface DoubleConsumer {
+public interface DoubleConsumer { /**函数式接口, DoubleConsumer接收一个double参数, 无返回结果. 是{@link Consumer}的特殊版本*/
 
     /**
      * Performs this operation on the given argument.
      *
      * @param value the input argument
-     */
+     */ // 接收参数并对参数执行指定逻辑
     void accept(double value);
 
     /**
@@ -59,7 +59,7 @@ public interface DoubleConsumer {
      * @return a composed {@code DoubleConsumer} that performs in sequence this
      * operation followed by the {@code after} operation
      * @throws NullPointerException if {@code after} is null
-     */
+     */ // 为当前Consumer增加一个额外的Consumer, 可以多次附加, 执行时依次对给定参数执行Consumer逻辑
     default DoubleConsumer andThen(DoubleConsumer after) {
         Objects.requireNonNull(after);
         return (double t) -> { accept(t); after.accept(t); };
