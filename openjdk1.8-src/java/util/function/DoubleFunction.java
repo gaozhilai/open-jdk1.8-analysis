@@ -36,15 +36,15 @@ package java.util.function;
  *
  * @see Function
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/25 18:33
 @FunctionalInterface
-public interface DoubleFunction<R> {
+public interface DoubleFunction<R> { /** 函数式接口, 代表一个输入值为double返回结果为R的函数, 是{@link Function}的特定输入值类型版本 */
 
     /**
      * Applies this function to the given argument.
      *
      * @param value the function argument
      * @return the function result
-     */
+     */ // 应用具体的DoubleFunction实现类的逻辑, 返回结果R
     R apply(double value);
 }

@@ -38,15 +38,15 @@ package java.util.function;
  *
  * @see BiConsumer
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/25 20:19
 @FunctionalInterface
-public interface ObjDoubleConsumer<T> {
+public interface ObjDoubleConsumer<T> { /** 函数式接口, 接收消耗一个T类型对象和一个double参数, 无返回结果. 是{@link BiConsumer}的特定版本 */
 
     /**
      * Performs this operation on the given arguments.
      *
      * @param t the first input argument
      * @param value the second input argument
-     */
+     */ // 接收一个T类型对象和一个double参数, 执行具体实现类逻辑
     void accept(T t, double value);
 }

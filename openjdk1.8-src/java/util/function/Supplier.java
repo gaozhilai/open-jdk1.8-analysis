@@ -44,6 +44,6 @@ public interface Supplier<T> { // 函数式接口, 代表生产者, 不接受参
      * Gets a result.
      *
      * @return a result
-     */
+     */ // 生产一个指定类型的对象
     T get();
 }

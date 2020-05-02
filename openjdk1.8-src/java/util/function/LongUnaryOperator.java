@@ -36,16 +36,16 @@ import java.util.Objects;
  *
  * @see UnaryOperator
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/25 20:18
 @FunctionalInterface
-public interface LongUnaryOperator {
+public interface LongUnaryOperator { /** 函数式接口, 接收一个long参数, 返回一个long结果, 是特定的{@link UnaryOperator}类型 */
 
     /**
      * Applies this operator to the given operand.
      *
      * @param operand the operand
      * @return the operator result
-     */
+     */ // 执行具体实现类逻辑, 接收一个long参数返回一个long结果
     long applyAsLong(long operand);
 
     /**
@@ -60,7 +60,7 @@ public interface LongUnaryOperator {
      * @throws NullPointerException if before is null
      *
      * @see #andThen(LongUnaryOperator)
-     */
+     */ // 在当前逻辑之前额外附加一个指定的LongUnaryOperator逻辑
     default LongUnaryOperator compose(LongUnaryOperator before) {
         Objects.requireNonNull(before);
         return (long v) -> applyAsLong(before.applyAsLong(v));
@@ -78,7 +78,7 @@ public interface LongUnaryOperator {
      * @throws NullPointerException if after is null
      *
      * @see #compose(LongUnaryOperator)
-     */
+     */ // 在当前逻辑之后额外附加一个指定的LongUnaryOperator逻辑
     default LongUnaryOperator andThen(LongUnaryOperator after) {
         Objects.requireNonNull(after);
         return (long t) -> after.applyAsLong(applyAsLong(t));
@@ -88,7 +88,7 @@ public interface LongUnaryOperator {
      * Returns a unary operator that always returns its input argument.
      *
      * @return a unary operator that always returns its input argument
-     */
+     */ // 工具方法, 构造一个逻辑为返回结果和接收参数一模一样的LongUnaryOperator
     static LongUnaryOperator identity() {
         return t -> t;
     }

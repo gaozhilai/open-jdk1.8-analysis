@@ -37,9 +37,9 @@ package java.util.function;
  *
  * @see BiFunction
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/25 20:28
 @FunctionalInterface
-public interface ToIntBiFunction<T, U> {
+public interface ToIntBiFunction<T, U> { /** 函数式接口, 接收一个T类型一个U类型参数, 返回一个int结果, 是特殊的{@link BiFunction} */
 
     /**
      * Applies this function to the given arguments.
@@ -47,6 +47,6 @@ public interface ToIntBiFunction<T, U> {
      * @param t the first function argument
      * @param u the second function argument
      * @return the function result
-     */
+     */ // 执行具体实现类逻辑, 接收一个T类型参数和一个U类型参数, 返回int结果
     int applyAsInt(T t, U u);
 }

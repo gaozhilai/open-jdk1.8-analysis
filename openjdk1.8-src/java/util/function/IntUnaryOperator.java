@@ -36,16 +36,16 @@ import java.util.Objects;
  *
  * @see UnaryOperator
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/25 20:09
 @FunctionalInterface
-public interface IntUnaryOperator {
+public interface IntUnaryOperator { /** 函数式接口, 接收一个int参数, 返回一个int结果, 是特定的{@link UnaryOperator}类型 */
 
     /**
      * Applies this operator to the given operand.
      *
      * @param operand the operand
      * @return the operator result
-     */
+     */ // 执行具体实现类逻辑, 接收一个int参数返回一个int结果
     int applyAsInt(int operand);
 
     /**
@@ -60,7 +60,7 @@ public interface IntUnaryOperator {
      * @throws NullPointerException if before is null
      *
      * @see #andThen(IntUnaryOperator)
-     */
+     */ // 在当前逻辑之前额外附加一个指定的IntUnaryOperator逻辑
     default IntUnaryOperator compose(IntUnaryOperator before) {
         Objects.requireNonNull(before);
         return (int v) -> applyAsInt(before.applyAsInt(v));
@@ -78,7 +78,7 @@ public interface IntUnaryOperator {
      * @throws NullPointerException if after is null
      *
      * @see #compose(IntUnaryOperator)
-     */
+     */ // 在当前逻辑之后额外附加一个指定的IntUnaryOperator逻辑
     default IntUnaryOperator andThen(IntUnaryOperator after) {
         Objects.requireNonNull(after);
         return (int t) -> after.applyAsInt(applyAsInt(t));
@@ -88,7 +88,7 @@ public interface IntUnaryOperator {
      * Returns a unary operator that always returns its input argument.
      *
      * @return a unary operator that always returns its input argument
-     */
+     */ // 工具方法, 构造一个逻辑为返回结果和接收参数一模一样的IntUnaryOperator
     static IntUnaryOperator identity() {
         return t -> t;
     }

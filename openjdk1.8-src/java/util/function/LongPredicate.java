@@ -36,9 +36,9 @@ import java.util.Objects;
  *
  * @see Predicate
  * @since 1.8
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/4/25 20:15
 @FunctionalInterface
-public interface LongPredicate {
+public interface LongPredicate { /** 函数式接口, 代表一个接受long类型参数的断言, 是{@link Predicate}的特殊版本 */
 
     /**
      * Evaluates this predicate on the given argument.
@@ -46,7 +46,7 @@ public interface LongPredicate {
      * @param value the input argument
      * @return {@code true} if the input argument matches the predicate,
      * otherwise {@code false}
-     */
+     */ // 调用实现类断言逻辑, 并返回布尔结果
     boolean test(long value);
 
     /**
@@ -64,7 +64,7 @@ public interface LongPredicate {
      * @return a composed predicate that represents the short-circuiting logical
      * AND of this predicate and the {@code other} predicate
      * @throws NullPointerException if other is null
-     */
+     */ // 在当前断言基础上, 额外添加一个断言判断, 与前面的断言结果之间逻辑是and
     default LongPredicate and(LongPredicate other) {
         Objects.requireNonNull(other);
         return (value) -> test(value) && other.test(value);
@@ -76,7 +76,7 @@ public interface LongPredicate {
      *
      * @return a predicate that represents the logical negation of this
      * predicate
-     */
+     */ // 将当前断言逻辑取反
     default LongPredicate negate() {
         return (value) -> !test(value);
     }
@@ -96,7 +96,7 @@ public interface LongPredicate {
      * @return a composed predicate that represents the short-circuiting logical
      * OR of this predicate and the {@code other} predicate
      * @throws NullPointerException if other is null
-     */
+     */ // 在当前断言基础上, 额外添加一个断言判断, 与前面的断言结果之间逻辑是or
     default LongPredicate or(LongPredicate other) {
         Objects.requireNonNull(other);
         return (value) -> test(value) || other.test(value);
