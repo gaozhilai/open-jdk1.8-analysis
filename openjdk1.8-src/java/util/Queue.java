@@ -140,8 +140,8 @@ package java.util;
  * @since 1.5
  * @author Doug Lea
  * @param <E> the type of elements held in this collection
- */
-public interface Queue<E> extends Collection<E> {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/5/8 14:00
+public interface Queue<E> extends Collection<E> { // Queue队列类专注于集合元素的插入和访问顺序, 在基本的集合方法外添加了一些入队和出队方法
     /**
      * Inserts the specified element into this queue if it is possible to do so
      * immediately without violating capacity restrictions, returning
@@ -158,7 +158,7 @@ public interface Queue<E> extends Collection<E> {
      *         this queue does not permit null elements
      * @throws IllegalArgumentException if some property of this element
      *         prevents it from being added to this queue
-     */
+     */ // 向队列尾部添加一个元素, 如果空间不足以添加元素, 抛出异常
     boolean add(E e);
 
     /**
@@ -177,7 +177,7 @@ public interface Queue<E> extends Collection<E> {
      *         this queue does not permit null elements
      * @throws IllegalArgumentException if some property of this element
      *         prevents it from being added to this queue
-     */
+     */ /** 向队列尾部添加一个元素, 如果空间不足以添加元素, 返回false, 相比{@link #add(Object)}抛出异常更可取 */
     boolean offer(E e);
 
     /**
@@ -187,7 +187,7 @@ public interface Queue<E> extends Collection<E> {
      *
      * @return the head of this queue
      * @throws NoSuchElementException if this queue is empty
-     */
+     */ // 移除队列头部一个元素, 并将移除的元素返回, 移除失败抛出异常
     E remove();
 
     /**
@@ -195,7 +195,7 @@ public interface Queue<E> extends Collection<E> {
      * or returns {@code null} if this queue is empty.
      *
      * @return the head of this queue, or {@code null} if this queue is empty
-     */
+     */ /** 移除队列头部一个元素, 并将移除的元素返回, 移除失败返回null, 相比{@link #remove()}抛出异常更可取 */
     E poll();
 
     /**
@@ -205,7 +205,7 @@ public interface Queue<E> extends Collection<E> {
      *
      * @return the head of this queue
      * @throws NoSuchElementException if this queue is empty
-     */
+     */ // 返回队列头部第一个元素, 但是不移除, 如果队列是空的则抛出异常
     E element();
 
     /**
@@ -213,6 +213,6 @@ public interface Queue<E> extends Collection<E> {
      * or returns {@code null} if this queue is empty.
      *
      * @return the head of this queue, or {@code null} if this queue is empty
-     */
+     */ /** 返回队列头部第一个元素, 但是不移除, 如果队列是空的则返回null, 相比{@link #element()}抛出异常更可取 */
     E peek();
 }
