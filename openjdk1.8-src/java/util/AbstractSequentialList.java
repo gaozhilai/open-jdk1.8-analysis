@@ -65,12 +65,12 @@ package java.util;
  * @see AbstractCollection
  * @since 1.2
  */
-
-public abstract class AbstractSequentialList<E> extends AbstractList<E> {
+ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/5/8 18:44
+public abstract class AbstractSequentialList<E> extends AbstractList<E> { // 此类是顺序访问类型序列的抽象类, 提供了骨架方法实现(相关方法是顺序操作实现, 与AbstractList随机访问实现不同), 继承者需要至少实现ListIterator
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
      * implicit.)
-     */
+     */ // 默认构造方法只允许子类调用
     protected AbstractSequentialList() {
     }
 
@@ -82,7 +82,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * the element using <tt>ListIterator.next</tt> and returns it.
      *
      * @throws IndexOutOfBoundsException {@inheritDoc}
-     */
+     */ /** 见{@link List#get(int)}, 此处的实现是先获取指定位置的ListIterator, 然后调用其next方法 */
     public E get(int index) {
         try {
             return listIterator(index).next();
@@ -109,7 +109,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
-     */
+     */ /** 见{@link List#set(int, Object)}, 此处的实现是先获取指定位置的ListIterator, 然后调用其set方法 */
     public E set(int index, E element) {
         try {
             ListIterator<E> e = listIterator(index);
@@ -140,7 +140,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
-     */
+     */ /** 见{@link List#add(int, Object)}, 此处的实现是先获取指定位置的ListIterator, 然后调用其add方法 */
     public void add(int index, E element) {
         try {
             listIterator(index).add(element);
@@ -165,7 +165,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      *
      * @throws UnsupportedOperationException {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
-     */
+     */ /** 见{@link List#remove(int)}, 此处的实现是先获取指定位置的ListIterator, 然后调用其remove方法 */
     public E remove(int index) {
         try {
             ListIterator<E> e = listIterator(index);
@@ -178,7 +178,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
     }
 
 
-    // Bulk Operations
+    // Bulk Operations 批量操作
 
     /**
      * Inserts all of the elements in the specified collection into this
@@ -208,7 +208,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      * @throws IndexOutOfBoundsException     {@inheritDoc}
-     */
+     */ /** 见{@link List#addAll(int, Collection)}, 此处的实现是先获取指定位置的ListIterator, 然后从参数集合中遍历元素循环调用其add方法 */
     public boolean addAll(int index, Collection<? extends E> c) {
         try {
             boolean modified = false;
@@ -225,7 +225,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
     }
 
 
-    // Iterators
+    // Iterators 迭代器方法
 
     /**
      * Returns an iterator over the elements in this list (in proper
@@ -234,7 +234,7 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * This implementation merely returns a list iterator over the list.
      *
      * @return an iterator over the elements in this list (in proper sequence)
-     */
+     */ /** 见{@link List#iterator()} */
     public Iterator<E> iterator() {
         return listIterator();
     }
@@ -248,6 +248,6 @@ public abstract class AbstractSequentialList<E> extends AbstractList<E> {
      * @return a list iterator over the elements in this list (in proper
      *         sequence)
      * @throws IndexOutOfBoundsException {@inheritDoc}
-     */
+     */ /** 见{@link List#listIterator()}, 此方法需要具体实现类去实现 */
     public abstract ListIterator<E> listIterator(int index);
 }
