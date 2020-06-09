@@ -33,13 +33,13 @@ package java.lang;
  *
  * @author  Jonni Kanerva
  * @since   JDK1.1
- */
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/6/9 15:24
 public
-class IllegalStateException extends RuntimeException {
+class IllegalStateException extends RuntimeException { // 运行时异常, 表示方法被调用时状态异常, 有可能由于在非法的时间调用或者非法调用导致
     /**
      * Constructs an IllegalStateException with no detail message.
      * A detail message is a String that describes this particular exception.
-     */
+     */ // 默认的无参构方法
     public IllegalStateException() {
         super();
     }
@@ -50,7 +50,7 @@ class IllegalStateException extends RuntimeException {
      * exception.
      *
      * @param s the String that contains a detailed message
-     */
+     */ // 根据给定异常信息构造异常实例
     public IllegalStateException(String s) {
         super(s);
     }
@@ -70,7 +70,7 @@ class IllegalStateException extends RuntimeException {
      *         is permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      * @since 1.5
-     */
+     */ // 根据给定的异常信息以及另一个异常构造异常实例
     public IllegalStateException(String message, Throwable cause) {
         super(message, cause);
     }
@@ -88,7 +88,7 @@ class IllegalStateException extends RuntimeException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      * @since  1.5
-     */
+     */ // 根据另一个异常构造异常实例
     public IllegalStateException(Throwable cause) {
         super(cause);
     }
