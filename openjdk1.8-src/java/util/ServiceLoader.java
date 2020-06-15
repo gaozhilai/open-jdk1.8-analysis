@@ -181,26 +181,26 @@ import java.util.NoSuchElementException;
  * @author Mark Reinhold
  * @since 1.6
  */
-
+ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/6/12 11:02
 public final class ServiceLoader<S>
-    implements Iterable<S>
+    implements Iterable<S> // ServiceLoader包含的元素是可迭代的
 {
-
+    // SPI实现类信息配置文件所在目录
     private static final String PREFIX = "META-INF/services/";
 
-    // The class or interface representing the service being loaded
+    // The class or interface representing the service being loaded 保存已经加载的服务定义接口/类具体实现类
     private final Class<S> service;
 
-    // The class loader used to locate, load, and instantiate providers
+    // The class loader used to locate, load, and instantiate providers 如果没有指定类加载器默认是系统加载器AppClassLoader, 用于服务实现类的寻找和加载
     private final ClassLoader loader;
 
-    // The access control context taken when the ServiceLoader is created
+    // The access control context taken when the ServiceLoader is created 访问控制上下文
     private final AccessControlContext acc;
 
-    // Cached providers, in instantiation order
+    // Cached providers, in instantiation order 当前ServiceLoader实例中已经加载的服务提供类(懒加载迭代器调用过nextService方法返回的类)
     private LinkedHashMap<String,S> providers = new LinkedHashMap<>();
 
-    // The current lazy-lookup iterator
+    // The current lazy-lookup iterator 懒加载迭代器, 包含了所有的service的SPI机制的实现类, 只有调用相关方法, 此迭代器才会实际加载相应实现类
     private LazyIterator lookupIterator;
 
     /**
@@ -213,32 +213,32 @@ public final class ServiceLoader<S>
      *
      * <p> This method is intended for use in situations in which new providers
      * can be installed into a running Java virtual machine.
-     */
+     */ // 清空并重新加载当前ServiceLoader实例指定的ServiceProviderInterface对应的实现类, 此方法存在是为了让运行中的虚拟机重新加载实现类
     public void reload() {
-        providers.clear();
-        lookupIterator = new LazyIterator(service, loader);
+        providers.clear(); // 清空当前保存的加载过的服务实现类
+        lookupIterator = new LazyIterator(service, loader); // 创建新的包含所有实现类的懒加载迭代器
     }
-
+    // 私有构造器, 只有通过ServiceLoader提供的工具方法间接调用此方法才能构建ServiceLoader的实例
     private ServiceLoader(Class<S> svc, ClassLoader cl) {
-        service = Objects.requireNonNull(svc, "Service interface cannot be null");
-        loader = (cl == null) ? ClassLoader.getSystemClassLoader() : cl;
-        acc = (System.getSecurityManager() != null) ? AccessController.getContext() : null;
-        reload();
+        service = Objects.requireNonNull(svc, "Service interface cannot be null"); // 暂存校验指定的Service Interface不能为空
+        loader = (cl == null) ? ClassLoader.getSystemClassLoader() : cl; // 暂存类加载器, 如果没有直接指定使用默认的AppClassLoader
+        acc = (System.getSecurityManager() != null) ? AccessController.getContext() : null; // 暂存访问控制上下文
+        reload(); // 加载服务实现类
     }
-
+    // 根据service和消息以及具体异常构建异常并抛出
     private static void fail(Class<?> service, String msg, Throwable cause)
         throws ServiceConfigurationError
     {
         throw new ServiceConfigurationError(service.getName() + ": " + msg,
                                             cause);
     }
-
+    // 根据service和异常信息构建异常并抛出
     private static void fail(Class<?> service, String msg)
         throws ServiceConfigurationError
     {
         throw new ServiceConfigurationError(service.getName() + ": " + msg);
     }
-
+    // 根据异常信息以及url和行数异常信息构造异常并抛出
     private static void fail(Class<?> service, URL u, int line, String msg)
         throws ServiceConfigurationError
     {
@@ -247,34 +247,34 @@ public final class ServiceLoader<S>
 
     // Parse a single line from the given configuration file, adding the name
     // on the line to the names list.
-    //
+    // 解析给定的SPI配置文件一行内容, 将此行配置的name放到name列表中
     private int parseLine(Class<?> service, URL u, BufferedReader r, int lc,
                           List<String> names)
         throws IOException, ServiceConfigurationError
     {
-        String ln = r.readLine();
-        if (ln == null) {
-            return -1;
+        String ln = r.readLine(); // 从配置文件中读取一行内容
+        if (ln == null) { // 如果内容为空
+            return -1; // 返回-1
         }
-        int ci = ln.indexOf('#');
-        if (ci >= 0) ln = ln.substring(0, ci);
-        ln = ln.trim();
+        int ci = ln.indexOf('#'); // 如果配置里带着#号, 代表配置的行是具体实现类的方法
+        if (ci >= 0) ln = ln.substring(0, ci); // 忽略方法名, 只保留到实现类全路径
+        ln = ln.trim(); // 去除字符串两端空格
         int n = ln.length();
-        if (n != 0) {
-            if ((ln.indexOf(' ') >= 0) || (ln.indexOf('\t') >= 0))
+        if (n != 0) { // 如果配置内容长度不等于0, 即有效配置
+            if ((ln.indexOf(' ') >= 0) || (ln.indexOf('\t') >= 0)) // 配置内容里不能有空格或者制表符
                 fail(service, u, lc, "Illegal configuration-file syntax");
-            int cp = ln.codePointAt(0);
-            if (!Character.isJavaIdentifierStart(cp))
+            int cp = ln.codePointAt(0); // 获得当前行配置信息第0个字符, 在当前编码表中此字符对应的数字
+            if (!Character.isJavaIdentifierStart(cp)) // 判断配置的实现类是否是java标识符开头
                 fail(service, u, lc, "Illegal provider-class name: " + ln);
-            for (int i = Character.charCount(cp); i < n; i += Character.charCount(cp)) {
+            for (int i = Character.charCount(cp); i < n; i += Character.charCount(cp)) { // 依旧是检测配置的类名是否合法
                 cp = ln.codePointAt(i);
                 if (!Character.isJavaIdentifierPart(cp) && (cp != '.'))
                     fail(service, u, lc, "Illegal provider-class name: " + ln);
             }
-            if (!providers.containsKey(ln) && !names.contains(ln))
-                names.add(ln);
+            if (!providers.containsKey(ln) && !names.contains(ln)) // 当前providers字段中不存在此行配置的类名, 并且name列表中也不存在时
+                names.add(ln); // 将名字加入name列表
         }
-        return lc + 1;
+        return lc + 1; // 返回下一次解析的行号
     }
 
     // Parse the content of the given URL as a provider-configuration file.
@@ -293,18 +293,19 @@ public final class ServiceLoader<S>
     // @throws ServiceConfigurationError
     //         If an I/O error occurs while reading from the given URL, or
     //         if a configuration-file format error is detected
-    //
+    // 解析配置文件, 将配置文件中配置的实现类全路径放入到name列表并返回其迭代器
     private Iterator<String> parse(Class<?> service, URL u)
         throws ServiceConfigurationError
     {
         InputStream in = null;
         BufferedReader r = null;
         ArrayList<String> names = new ArrayList<>();
+
         try {
-            in = u.openStream();
-            r = new BufferedReader(new InputStreamReader(in, "utf-8"));
-            int lc = 1;
-            while ((lc = parseLine(service, u, r, lc, names)) >= 0);
+            in = u.openStream(); // 从url指向的文件获取输入流
+            r = new BufferedReader(new InputStreamReader(in, "utf-8")); // 装饰成带缓冲的输入流
+            int lc = 1; // 从第一行开始解析
+            while ((lc = parseLine(service, u, r, lc, names)) >= 0); // 直到解析到配置文件末尾
         } catch (IOException x) {
             fail(service, "Error reading configuration file", x);
         } finally {
@@ -315,71 +316,71 @@ public final class ServiceLoader<S>
                 fail(service, "Error closing configuration file", y);
             }
         }
-        return names.iterator();
+        return names.iterator(); // 返回包含实现类全路径作为元素的迭代器
     }
 
     // Private inner class implementing fully-lazy provider lookup
-    //
+    // ServiceLoader版本的懒加载迭代器定义
     private class LazyIterator
         implements Iterator<S>
     {
 
-        Class<S> service;
-        ClassLoader loader;
-        Enumeration<URL> configs = null;
-        Iterator<String> pending = null;
-        String nextName = null;
+        Class<S> service; // 服务定义类
+        ClassLoader loader; // 要使用的类加载器
+        Enumeration<URL> configs = null; // 配置文件url, 根据ClassLoader的不同, 给定配置文件名可能返回多个文件url
+        Iterator<String> pending = null; // 实现类全路径列表
+        String nextName = null; // 下一次调用next方法要返回的实现类全路径
 
         private LazyIterator(Class<S> service, ClassLoader loader) {
             this.service = service;
             this.loader = loader;
         }
-
+        // 是否有下一个实现类
         private boolean hasNextService() {
-            if (nextName != null) {
-                return true;
+            if (nextName != null) { // 如果有下次调用next要返回的值
+                return true; // 返回true
             }
-            if (configs == null) {
+            if (configs == null) { // 如果configs为null, 那么接下来初始化配置文件
                 try {
-                    String fullName = PREFIX + service.getName();
-                    if (loader == null)
-                        configs = ClassLoader.getSystemResources(fullName);
+                    String fullName = PREFIX + service.getName(); // 先获取约定格式的文件路径
+                    if (loader == null) // 如果没有指定类加载器
+                        configs = ClassLoader.getSystemResources(fullName); // 使用系统类加载器AppCLassLoader获取资源
                     else
-                        configs = loader.getResources(fullName);
+                        configs = loader.getResources(fullName); // 否则使用给定的类加载器加载配置文件url
                 } catch (IOException x) {
                     fail(service, "Error locating configuration files", x);
                 }
             }
-            while ((pending == null) || !pending.hasNext()) {
-                if (!configs.hasMoreElements()) {
-                    return false;
+            while ((pending == null) || !pending.hasNext()) { // 实现类列表为空, 或者实现类列表不存在下一个元素
+                if (!configs.hasMoreElements()) { // 配置文件url也没有下一个元素
+                    return false; // 返回false
                 }
-                pending = parse(service, configs.nextElement());
+                pending = parse(service, configs.nextElement()); // 否则根据配置文件url解析实现类列表
             }
-            nextName = pending.next();
-            return true;
+            nextName = pending.next(); // 设置下一次调用next要返回的实现类名称内容
+            return true; // 返回true
         }
-
+        // 返回下一个实现类的实例
         private S nextService() {
-            if (!hasNextService())
-                throw new NoSuchElementException();
-            String cn = nextName;
-            nextName = null;
+            if (!hasNextService()) // 如果不存在下一个实现类
+                throw new NoSuchElementException(); // 抛出异常
+            String cn = nextName; // 否则暂存本次要返回实例的全路径类名
+            nextName = null; // 将nextName置空
             Class<?> c = null;
             try {
-                c = Class.forName(cn, false, loader);
+                c = Class.forName(cn, false, loader); // 通过类全路径和给定的loader获得Class对象
             } catch (ClassNotFoundException x) {
                 fail(service,
                      "Provider " + cn + " not found");
             }
-            if (!service.isAssignableFrom(c)) {
+            if (!service.isAssignableFrom(c)) { // 判断获得的Class对象的实例是否可以赋值为service, 即Class是否是service的子类
                 fail(service,
-                     "Provider " + cn  + " not a subtype");
+                     "Provider " + cn  + " not a subtype"); // 如果不是抛出异常
             }
             try {
-                S p = service.cast(c.newInstance());
-                providers.put(cn, p);
-                return p;
+                S p = service.cast(c.newInstance()); // 将获得的实现类Class对象构造的实例转换成service类型暂存
+                providers.put(cn, p); // 将实例以对应的实现类全路径为key放入providers字段
+                return p; // 返回实例
             } catch (Throwable x) {
                 fail(service,
                      "Provider " + cn + " could not be instantiated",
@@ -387,31 +388,31 @@ public final class ServiceLoader<S>
             }
             throw new Error();          // This cannot happen
         }
-
+        /** 见{@link Iterator#hasNext()} */
         public boolean hasNext() {
-            if (acc == null) {
-                return hasNextService();
+            if (acc == null) { // 如果没有访问控制上下文
+                return hasNextService(); // 直接返回是否有下一个实现类
             } else {
                 PrivilegedAction<Boolean> action = new PrivilegedAction<Boolean>() {
                     public Boolean run() { return hasNextService(); }
                 };
-                return AccessController.doPrivileged(action, acc);
+                return AccessController.doPrivileged(action, acc); // 以特权的方式判断是否有下一个实现类
             }
         }
-
+        /** 见{@link Iterator#next()} */
         public S next() {
-            if (acc == null) {
-                return nextService();
+            if (acc == null) { // 如果没有访问控制上下文
+                return nextService(); // 返回下一个实现类实例
             } else {
                 PrivilegedAction<S> action = new PrivilegedAction<S>() {
                     public S run() { return nextService(); }
                 };
-                return AccessController.doPrivileged(action, acc);
+                return AccessController.doPrivileged(action, acc); // 以特权的方式返回下一个实现类实例
             }
         }
-
+        /** 见{@link Iterator#remove()} */
         public void remove() {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(); // 不支持移除操作
         }
 
     }
@@ -461,27 +462,27 @@ public final class ServiceLoader<S>
      *
      * @return  An iterator that lazily loads providers for this loader's
      *          service
-     */
+     */ /** 见{@link Iterable#iterator()} */
     public Iterator<S> iterator() {
-        return new Iterator<S>() {
+        return new Iterator<S>() { // 返回当前ServiceLoader包含的实现类实例的迭代器
 
             Iterator<Map.Entry<String,S>> knownProviders
-                = providers.entrySet().iterator();
-
+                = providers.entrySet().iterator(); // 先基于已知的provider获取迭代器
+            /** 见{@link Iterator#hasNext()} */
             public boolean hasNext() {
-                if (knownProviders.hasNext())
-                    return true;
-                return lookupIterator.hasNext();
+                if (knownProviders.hasNext()) // 如果已知的provider存在下一个元素
+                    return true; // 直接反会true
+                return lookupIterator.hasNext(); // 否则通过懒加载迭代器寻找是否存在下一个元素
             }
-
+            /** 见{@link Iterator#next()} */
             public S next() {
                 if (knownProviders.hasNext())
-                    return knownProviders.next().getValue();
-                return lookupIterator.next();
+                    return knownProviders.next().getValue(); // 同样先尝试从已知的provider获得下一个实现类实例
+                return lookupIterator.next(); // 不存在则尝试通过懒加载迭代器获得
             }
-
+            /** 见{@link Iterator#remove()} */
             public void remove() {
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperationException(); // 同样不支持移除操作
             }
 
         };
@@ -503,7 +504,7 @@ public final class ServiceLoader<S>
      *         used
      *
      * @return A new service loader
-     */
+     */ // 返回一个使用指定的ClassLoader和包含指定service实现类的ServiceLoader实例
     public static <S> ServiceLoader<S> load(Class<S> service,
                                             ClassLoader loader)
     {
@@ -532,7 +533,7 @@ public final class ServiceLoader<S>
      *         The interface or abstract class representing the service
      *
      * @return A new service loader
-     */
+     */ // 返回一个使用当前线程的ThreadContextClassLoader和包含指定service实现类的ServiceLoader实例
     public static <S> ServiceLoader<S> load(Class<S> service) {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         return ServiceLoader.load(service, cl);
@@ -563,7 +564,7 @@ public final class ServiceLoader<S>
      *         The interface or abstract class representing the service
      *
      * @return A new service loader
-     */
+     */ //  // 返回一个使用拓展类加载器ExtClassLoader和包含指定service实现类的ServiceLoader实例
     public static <S> ServiceLoader<S> loadInstalled(Class<S> service) {
         ClassLoader cl = ClassLoader.getSystemClassLoader();
         ClassLoader prev = null;
@@ -578,7 +579,7 @@ public final class ServiceLoader<S>
      * Returns a string describing this service.
      *
      * @return  A descriptive string
-     */
+     */ // toSring方法默认展示包含服务定义类的名字
     public String toString() {
         return "java.util.ServiceLoader[" + service.getName() + "]";
     }
