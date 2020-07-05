@@ -54,16 +54,16 @@ package java.util;
  * @see Set
  * @since 1.2
  */
-
-public abstract class AbstractSet<E> extends AbstractCollection<E> implements Set<E> {
+ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/7/3 18:21
+public abstract class AbstractSet<E> extends AbstractCollection<E> implements Set<E> { // Set的骨架类, 提供了一些方法通用实现, 实现自己的Set可以继承此类
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
      * implicit.)
-     */
+     */ // 保护权限的构造器, 只有子类可以调用
     protected AbstractSet() {
     }
 
-    // Comparison and hashing
+    // Comparison and hashing 比较和哈希相关方法
 
     /**
      * Compares the specified object with this set for equality.  Returns
@@ -81,18 +81,18 @@ public abstract class AbstractSet<E> extends AbstractCollection<E> implements Se
      *
      * @param o object to be compared for equality with this set
      * @return <tt>true</tt> if the specified object is equal to this set
-     */
+     */ /** 见{@link Set#equals(Object)} 两个Set包含元素相同视为相等, 即使两个Set是不同子类的实例 */
     public boolean equals(Object o) {
-        if (o == this)
-            return true;
+        if (o == this) // 内存地址相等, 就是同一个实例
+            return true; // 返回true
 
-        if (!(o instanceof Set))
-            return false;
-        Collection<?> c = (Collection<?>) o;
-        if (c.size() != size())
-            return false;
+        if (!(o instanceof Set)) // 参数不是Set
+            return false; // 返回false
+        Collection<?> c = (Collection<?>) o; // 将参数上转型成集合
+        if (c.size() != size()) // 如果两个实例包含元素个数不同, 那么一定不相等
+            return false; // 返回false
         try {
-            return containsAll(c);
+            return containsAll(c); // 否则包含元素数量相等, 并且当前实例又包含参数实例所有元素, 那么两个实例包含的元素是相同的, 返回true
         } catch (ClassCastException unused)   {
             return false;
         } catch (NullPointerException unused) {
@@ -116,14 +116,14 @@ public abstract class AbstractSet<E> extends AbstractCollection<E> implements Se
      * @return the hash code value for this set
      * @see Object#equals(Object)
      * @see Set#equals(Object)
-     */
+     */ /** 见{@link Set#hashCode()} hashCode与Set包含的每个元素相关 */
     public int hashCode() {
         int h = 0;
-        Iterator<E> i = iterator();
-        while (i.hasNext()) {
+        Iterator<E> i = iterator(); // 获取当前Set迭代器
+        while (i.hasNext()) { // 遍历每一个元素
             E obj = i.next();
             if (obj != null)
-                h += obj.hashCode();
+                h += obj.hashCode(); // 综合每一个元素的hashCode得到当前Set实例的hashCode
         }
         return h;
     }
@@ -164,23 +164,23 @@ public abstract class AbstractSet<E> extends AbstractCollection<E> implements Se
      *         or if the specified collection is null
      * @see #remove(Object)
      * @see #contains(Object)
-     */
+     */ /** 见{@link Set#removeAll(Collection)} 骨架实现通过迭代器实现removeAll逻辑*/
     public boolean removeAll(Collection<?> c) {
-        Objects.requireNonNull(c);
-        boolean modified = false;
+        Objects.requireNonNull(c); // 要移除的元素集合不能为空
+        boolean modified = false; // 返回结果默认是没有修改过当前Set实例
 
-        if (size() > c.size()) {
-            for (Iterator<?> i = c.iterator(); i.hasNext(); )
-                modified |= remove(i.next());
-        } else {
-            for (Iterator<?> i = iterator(); i.hasNext(); ) {
-                if (c.contains(i.next())) {
-                    i.remove();
-                    modified = true;
+        if (size() > c.size()) { // 如果当前实例包含元素大于给定的集合
+            for (Iterator<?> i = c.iterator(); i.hasNext(); ) // 遍历给定集合每一个元素
+                modified |= remove(i.next()); // 将其从当前Set实例移除, 并且记录是否有元素被移除
+        } else { // 要移除的元素集合包含的元素比当前Set包含元素还多
+            for (Iterator<?> i = iterator(); i.hasNext(); ) { // 遍历当前Set的每一个元素
+                if (c.contains(i.next())) { // 判断当前遍历到的元素是否在要移除元素的集合中存在
+                    i.remove(); // 要移除就进行移除操作
+                    modified = true; // 并记录是否有元素被移除
                 }
             }
         }
-        return modified;
+        return modified; // 返回当前Set实例是否有元素被移除
     }
 
 }

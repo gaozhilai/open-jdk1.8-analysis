@@ -81,9 +81,9 @@ package java.util;
  * @see Collections#EMPTY_SET
  * @since 1.2
  */
-
-public interface Set<E> extends Collection<E> {
-    // Query Operations
+ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/7/3 18:15
+public interface Set<E> extends Collection<E> { // Set本身是集合, 也就是由一个个的元素组成, 但是Set特殊在相同元素只能出现一次
+    // Query Operations 查询操作
 
     /**
      * Returns the number of elements in this set (its cardinality).  If this
@@ -91,14 +91,14 @@ public interface Set<E> extends Collection<E> {
      * <tt>Integer.MAX_VALUE</tt>.
      *
      * @return the number of elements in this set (its cardinality)
-     */
+     */ /** 见{@link Collection#size()} */
     int size();
 
     /**
      * Returns <tt>true</tt> if this set contains no elements.
      *
      * @return <tt>true</tt> if this set contains no elements
-     */
+     */ /** 见{@link Collection#isEmpty()} */
     boolean isEmpty();
 
     /**
@@ -115,7 +115,7 @@ public interface Set<E> extends Collection<E> {
      * @throws NullPointerException if the specified element is null and this
      *         set does not permit null elements
      * (<a href="Collection.html#optional-restrictions">optional</a>)
-     */
+     */ /** 见{@link Collection#contains(Object)} */
     boolean contains(Object o);
 
     /**
@@ -124,7 +124,7 @@ public interface Set<E> extends Collection<E> {
      * class that provides a guarantee).
      *
      * @return an iterator over the elements in this set
-     */
+     */ /** 见{@link Collection#iterator()}  */
     Iterator<E> iterator();
 
     /**
@@ -142,7 +142,7 @@ public interface Set<E> extends Collection<E> {
      * APIs.
      *
      * @return an array containing all the elements in this set
-     */
+     */ /** 见{@link Collection#toArray()} */
     Object[] toArray();
 
     /**
@@ -186,11 +186,11 @@ public interface Set<E> extends Collection<E> {
      *         is not a supertype of the runtime type of every element in this
      *         set
      * @throws NullPointerException if the specified array is null
-     */
+     */ /** 见{@link Collection#toArray(Object[])} */
     <T> T[] toArray(T[] a);
 
 
-    // Modification Operations
+    // Modification Operations 修改操作
 
     /**
      * Adds the specified element to this set if it is not already present
@@ -221,7 +221,7 @@ public interface Set<E> extends Collection<E> {
      *         set does not permit null elements
      * @throws IllegalArgumentException if some property of the specified element
      *         prevents it from being added to this set
-     */
+     */ /** 见{@link Collection#add(Object)} */
     boolean add(E e);
 
 
@@ -245,11 +245,11 @@ public interface Set<E> extends Collection<E> {
      * (<a href="Collection.html#optional-restrictions">optional</a>)
      * @throws UnsupportedOperationException if the <tt>remove</tt> operation
      *         is not supported by this set
-     */
+     */ /** 见{@link Collection#remove(Object)} */
     boolean remove(Object o);
 
 
-    // Bulk Operations
+    // Bulk Operations 批量操作
 
     /**
      * Returns <tt>true</tt> if this set contains all of the elements of the
@@ -269,7 +269,7 @@ public interface Set<E> extends Collection<E> {
      * (<a href="Collection.html#optional-restrictions">optional</a>),
      *         or if the specified collection is null
      * @see    #contains(Object)
-     */
+     */ /** 见{@link Collection#containsAll(Collection)} */
     boolean containsAll(Collection<?> c);
 
     /**
@@ -293,7 +293,7 @@ public interface Set<E> extends Collection<E> {
      * @throws IllegalArgumentException if some property of an element of the
      *         specified collection prevents it from being added to this set
      * @see #add(Object)
-     */
+     */ /** 见{@link Collection#addAll(Collection)} */
     boolean addAll(Collection<? extends E> c);
 
     /**
@@ -316,7 +316,7 @@ public interface Set<E> extends Collection<E> {
      *         (<a href="Collection.html#optional-restrictions">optional</a>),
      *         or if the specified collection is null
      * @see #remove(Object)
-     */
+     */ /** 见{@link Collection#retainAll(Collection)} */
     boolean retainAll(Collection<?> c);
 
     /**
@@ -339,7 +339,7 @@ public interface Set<E> extends Collection<E> {
      *         or if the specified collection is null
      * @see #remove(Object)
      * @see #contains(Object)
-     */
+     */ /** 见{@link Collection#removeAll(Collection)} */
     boolean removeAll(Collection<?> c);
 
     /**
@@ -348,11 +348,11 @@ public interface Set<E> extends Collection<E> {
      *
      * @throws UnsupportedOperationException if the <tt>clear</tt> method
      *         is not supported by this set
-     */
+     */ /** 见{@link Collection#clear()} */
     void clear();
 
 
-    // Comparison and hashing
+    // Comparison and hashing 比较和哈希相关方法
 
     /**
      * Compares the specified object with this set for equality.  Returns
@@ -365,7 +365,7 @@ public interface Set<E> extends Collection<E> {
      *
      * @param o object to be compared for equality with this set
      * @return <tt>true</tt> if the specified object is equal to this set
-     */
+     */ /** 见{@link Collection#equals(Object)} */
     boolean equals(Object o);
 
     /**
@@ -380,7 +380,7 @@ public interface Set<E> extends Collection<E> {
      * @return the hash code value for this set
      * @see Object#equals(Object)
      * @see Set#equals(Object)
-     */
+     */ /** 见{@link Collection#hashCode()} */
     int hashCode();
 
     /**
@@ -405,7 +405,7 @@ public interface Set<E> extends Collection<E> {
      *
      * @return a {@code Spliterator} over the elements in this set
      * @since 1.8
-     */
+     */ /** 见{@link Collection#spliterator()} */
     @Override
     default Spliterator<E> spliterator() {
         return Spliterators.spliterator(this, Spliterator.DISTINCT);
