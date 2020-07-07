@@ -57,15 +57,15 @@ package java.util;
  *
  * @author  Lee Boynton
  * @since   JDK1.0
- */
-public interface Enumeration<E> {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/7/7 15:45
+public interface Enumeration<E> { /** Enumeration类型的实例也是包含了一些元素用于遍历, 出现时代也是jdk1.0, 在jdk1.2中被{@link Iterator}取代, Iterator支持遍历中移除底层集合的元素, 方法命名更明确 */
     /**
      * Tests if this enumeration contains more elements.
      *
      * @return  <code>true</code> if and only if this enumeration object
      *           contains at least one more element to provide;
      *          <code>false</code> otherwise.
-     */
+     */ // 判断当前实例是否包含更多待遍历的实例
     boolean hasMoreElements();
 
     /**
@@ -74,6 +74,6 @@ public interface Enumeration<E> {
      *
      * @return     the next element of this enumeration.
      * @exception  NoSuchElementException  if no more elements exist.
-     */
+     */ // 返回下一个要遍历的元素
     E nextElement();
 }

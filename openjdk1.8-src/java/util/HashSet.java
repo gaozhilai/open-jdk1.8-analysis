@@ -86,24 +86,24 @@ import sun.misc.SharedSecrets;
  * @see     HashMap
  * @since   1.2
  */
-
-public class HashSet<E>
-    extends AbstractSet<E>
+ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/7/7 10:12
+public class HashSet<E> // HashSet是一个基于HashMap实现的Set, 一下子就具备了hash相关的优点, 同时也体现了类组合的威力
+    extends AbstractSet<E> // 继承Set的抽象类, 得到骨架实现
     implements Set<E>, Cloneable, java.io.Serializable
 {
     static final long serialVersionUID = -5024744406713321676L;
-
+    // HashMap字段用于存储HashSet实例包含的元素
     private transient HashMap<E,Object> map;
 
-    // Dummy value to associate with an Object in the backing Map
+    // Dummy value to associate with an Object in the backing Map dummy字段, 为了符合底层HashMap的key-value结构, 没有实际逻辑作用, 要添加的元素作为key, 此字段作为所有key的value
     private static final Object PRESENT = new Object();
 
     /**
      * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
      * default initial capacity (16) and load factor (0.75).
-     */
+     */ // 默认构造器
     public HashSet() {
-        map = new HashMap<>();
+        map = new HashMap<>(); // 初始化底层的HashMap实例
     }
 
     /**
@@ -114,10 +114,10 @@ public class HashSet<E>
      *
      * @param c the collection whose elements are to be placed into this set
      * @throws NullPointerException if the specified collection is null
-     */
+     */ // 接收集合参数返回包含其元素的HashSet实例
     public HashSet(Collection<? extends E> c) {
-        map = new HashMap<>(Math.max((int) (c.size()/.75f) + 1, 16));
-        addAll(c);
+        map = new HashMap<>(Math.max((int) (c.size()/.75f) + 1, 16)); // 根据集合元素数量初始化底层HashMap容量
+        addAll(c); // 将集合元素添加到当前实例(此方法去调用当前HashSet的add方法了)
     }
 
     /**
@@ -128,7 +128,7 @@ public class HashSet<E>
      * @param      loadFactor        the load factor of the hash map
      * @throws     IllegalArgumentException if the initial capacity is less
      *             than zero, or if the load factor is nonpositive
-     */
+     */ // 自定义底层HashMap的初始容量与加载因子的构造器
     public HashSet(int initialCapacity, float loadFactor) {
         map = new HashMap<>(initialCapacity, loadFactor);
     }
@@ -140,7 +140,7 @@ public class HashSet<E>
      * @param      initialCapacity   the initial capacity of the hash table
      * @throws     IllegalArgumentException if the initial capacity is less
      *             than zero
-     */
+     */ // 自定义底层HashMap初始容量的构造器
     public HashSet(int initialCapacity) {
         map = new HashMap<>(initialCapacity);
     }
@@ -157,7 +157,7 @@ public class HashSet<E>
      *             constructor from other int, float constructor.)
      * @throws     IllegalArgumentException if the initial capacity is less
      *             than zero, or if the load factor is nonpositive
-     */
+     */ // 自定义初始容量, 加载因子, 并将底层HashMap字段初始化成LinkedHassMap. 注意dummy参数是无用的, 为了与其他构造器区分开
     HashSet(int initialCapacity, float loadFactor, boolean dummy) {
         map = new LinkedHashMap<>(initialCapacity, loadFactor);
     }
@@ -168,7 +168,7 @@ public class HashSet<E>
      *
      * @return an Iterator over the elements in this set
      * @see ConcurrentModificationException
-     */
+     */ /** 见{@link AbstractCollection#iterator()} */
     public Iterator<E> iterator() {
         return map.keySet().iterator();
     }
@@ -177,18 +177,18 @@ public class HashSet<E>
      * Returns the number of elements in this set (its cardinality).
      *
      * @return the number of elements in this set (its cardinality)
-     */
+     */ /** 见{@link AbstractCollection#size()} */
     public int size() {
-        return map.size();
+        return map.size(); // 实际通过底层HashMap的size方法实现
     }
 
     /**
      * Returns <tt>true</tt> if this set contains no elements.
      *
      * @return <tt>true</tt> if this set contains no elements
-     */
+     */ /** 见{@link AbstractCollection#isEmpty()} */
     public boolean isEmpty() {
-        return map.isEmpty();
+        return map.isEmpty(); // 实际通过底层HashMap的isEmpty方法实现
     }
 
     /**
@@ -199,9 +199,9 @@ public class HashSet<E>
      *
      * @param o element whose presence in this set is to be tested
      * @return <tt>true</tt> if this set contains the specified element
-     */
+     */ /** 见{@link AbstractCollection#contains(Object)} */
     public boolean contains(Object o) {
-        return map.containsKey(o);
+        return map.containsKey(o); // 实际通过底层的HashMap的containsKey实现
     }
 
     /**
@@ -215,9 +215,9 @@ public class HashSet<E>
      * @param e element to be added to this set
      * @return <tt>true</tt> if this set did not already contain the specified
      * element
-     */
+     */ /** 见{@link AbstractCollection#add(Object)} */
     public boolean add(E e) {
-        return map.put(e, PRESENT)==null;
+        return map.put(e, PRESENT)==null; // 将dummy value作为值, 要添加的元素作为key, 添加到底层的HashMap
     }
 
     /**
@@ -231,17 +231,17 @@ public class HashSet<E>
      *
      * @param o object to be removed from this set, if present
      * @return <tt>true</tt> if the set contained the specified element
-     */
+     */ /** 见{@link AbstractCollection#remove(Object)} */
     public boolean remove(Object o) {
-        return map.remove(o)==PRESENT;
+        return map.remove(o)==PRESENT; // 从底层的HashMap中移除对应的key-value, 通过remove方法返回结果来判断是否有元素被移除
     }
 
     /**
      * Removes all of the elements from this set.
      * The set will be empty after this call returns.
-     */
+     */ /** 见{@link AbstractCollection#clear()} */
     public void clear() {
-        map.clear();
+        map.clear(); // 实际通过底层HashMap的clear方法实现
     }
 
     /**
@@ -249,7 +249,7 @@ public class HashSet<E>
      * themselves are not cloned.
      *
      * @return a shallow copy of this set
-     */
+     */ // 浅克隆
     @SuppressWarnings("unchecked")
     public Object clone() {
         try {
@@ -270,7 +270,7 @@ public class HashSet<E>
      *             the size of the set (the number of elements it contains)
      *             (int), followed by all of its elements (each an Object) in
      *             no particular order.
-     */
+     */ // 将当前实例序列化到对象输出流
     private void writeObject(java.io.ObjectOutputStream s)
         throws java.io.IOException {
         // Write out any hidden serialization magic
@@ -291,7 +291,7 @@ public class HashSet<E>
     /**
      * Reconstitute the <tt>HashSet</tt> instance from a stream (that is,
      * deserialize it).
-     */
+     */ // 从对象输入流反序列化对象实例
     private void readObject(java.io.ObjectInputStream s)
         throws java.io.IOException, ClassNotFoundException {
         // Read in any hidden serialization magic
@@ -354,8 +354,8 @@ public class HashSet<E>
      *
      * @return a {@code Spliterator} over the elements in this set
      * @since 1.8
-     */
+     */ /** 见{@link AbstractCollection#spliterator()} */
     public Spliterator<E> spliterator() {
-        return new HashMap.KeySpliterator<E,Object>(map, 0, -1, 0, 0);
+        return new HashMap.KeySpliterator<E,Object>(map, 0, -1, 0, 0); // 底层实际通过HashMap对应方法实现
     }
 }

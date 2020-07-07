@@ -45,13 +45,13 @@ package java.util;
  * @see     java.lang.Object#hashCode()
  * @see     java.util.Hashtable
  * @since   JDK1.0
- */
-public abstract
-class Dictionary<K,V> {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/7/7 15:32
+public abstract /**  字典表抽象类, 已知实现类为{@link Hashtable}, 此抽象类出现在JDK1.0, 没有很好的考虑到集合框架层次, jdk1.2引入了集合框架, 此类被{@link Map}代替 */
+class Dictionary<K,V> { // 可以看到jdk1.0时代的确考虑不到太多涉及层面的东西, 此抽象类命名甚至不是Abstract开头的
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
      * implicit.)
-     */
+     */ // 默认构造器, 抽象类构造器默认隐式的只能被子类调用, 此处设置为了public也不影响这一规则, 不过可以看出考虑并不周全, 集合框架时代提供的抽象类比如AbstractSet构造器就是protected的
     public Dictionary() {
     }
 
@@ -59,7 +59,7 @@ class Dictionary<K,V> {
      * Returns the number of entries (distinct keys) in this dictionary.
      *
      * @return  the number of keys in this dictionary.
-     */
+     */ // 返回字典表实例包含的key-value对数量
     abstract public int size();
 
     /**
@@ -69,7 +69,7 @@ class Dictionary<K,V> {
      *
      * @return  <code>true</code> if this dictionary maps no keys to values;
      *          <code>false</code> otherwise.
-     */
+     */ // 判断当前实例是否为空
     abstract public boolean isEmpty();
 
     /**
@@ -81,7 +81,7 @@ class Dictionary<K,V> {
      * @return  an enumeration of the keys in this dictionary.
      * @see     java.util.Dictionary#elements()
      * @see     java.util.Enumeration
-     */
+     */ /** 返回当前实例包含的Key的枚举, 这里的结果类型也被废弃了, 被{@link Iterator}所代替 */
     abstract public Enumeration<K> keys();
 
     /**
@@ -93,7 +93,7 @@ class Dictionary<K,V> {
      * @return  an enumeration of the values in this dictionary.
      * @see     java.util.Dictionary#keys()
      * @see     java.util.Enumeration
-     */
+     */ // 返回当前实例包含的value枚举
     abstract public Enumeration<V> elements();
 
     /**
@@ -108,7 +108,7 @@ class Dictionary<K,V> {
      *          this dictionary.
      * @exception NullPointerException if the <tt>key</tt> is <tt>null</tt>.
      * @see     java.util.Dictionary#put(java.lang.Object, java.lang.Object)
-     */
+     */ // 根据给定key返回对应的value
     abstract public V get(Object key);
 
     /**
@@ -137,7 +137,7 @@ class Dictionary<K,V> {
      *               <code>value</code> is <code>null</code>.
      * @see        java.lang.Object#equals(java.lang.Object)
      * @see        java.util.Dictionary#get(java.lang.Object)
-     */
+     */ // 将指定的key-value对添加到当前实例
     abstract public V put(K key, V value);
 
     /**
@@ -150,6 +150,6 @@ class Dictionary<K,V> {
      *          dictionary, or <code>null</code> if the key did not have a
      *          mapping.
      * @exception NullPointerException if <tt>key</tt> is <tt>null</tt>.
-     */
+     */ // 根据给定key, 移除当前实例相应的key-value对
     abstract public V remove(Object key);
 }
