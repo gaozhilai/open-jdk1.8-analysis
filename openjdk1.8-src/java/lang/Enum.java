@@ -51,14 +51,14 @@ import java.io.ObjectStreamException;
  * @see     java.util.EnumSet
  * @see     java.util.EnumMap
  * @since   1.5
- */
-public abstract class Enum<E extends Enum<E>>
-        implements Comparable<E>, Serializable {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/7/7 16:22
+public abstract class Enum<E extends Enum<E>> // 枚举类的父类型, enum类型将会被编译器转换成public final class Name extends Enum{}的形式
+        implements Comparable<E>, Serializable { // 枚举中每一个元素都是当前枚举类型本身
     /**
      * The name of this enum constant, as declared in the enum declaration.
      * Most programmers should use the {@link #toString} method rather than
      * accessing this field.
-     */
+     */ // 枚举元素的名字是枚举元素的字面定义名字, 由编译器实例化枚举元素时进行初始化
     private final String name;
 
     /**
@@ -72,7 +72,7 @@ public abstract class Enum<E extends Enum<E>>
      * exact name, which will not vary from release to release.
      *
      * @return the name of this enum constant
-     */
+     */ // 返回当前枚举元素的名字
     public final String name() {
         return name;
     }
@@ -85,7 +85,7 @@ public abstract class Enum<E extends Enum<E>>
      * Most programmers will have no use for this field.  It is designed
      * for use by sophisticated enum-based data structures, such as
      * {@link java.util.EnumSet} and {@link java.util.EnumMap}.
-     */
+     */ // 当前枚举元素的序号, 由枚举元素声明顺序决定, 从0开始, 也是由编译器实例化枚举元素时初始化
     private final int ordinal;
 
     /**
@@ -98,7 +98,7 @@ public abstract class Enum<E extends Enum<E>>
      * as {@link java.util.EnumSet} and {@link java.util.EnumMap}.
      *
      * @return the ordinal of this enumeration constant
-     */
+     */ // 返回当前枚举元素的序号
     public final int ordinal() {
         return ordinal;
     }
@@ -113,7 +113,7 @@ public abstract class Enum<E extends Enum<E>>
      * @param ordinal - The ordinal of this enumeration constant (its position
      *         in the enum declaration, where the initial constant is assigned
      *         an ordinal of zero).
-     */
+     */ // 指定枚举元素名字和序号的构造器, 由上面提到的编译器隐式生成代码进行调用
     protected Enum(String name, int ordinal) {
         this.name = name;
         this.ordinal = ordinal;
@@ -126,7 +126,7 @@ public abstract class Enum<E extends Enum<E>>
      * method when a more "programmer-friendly" string form exists.
      *
      * @return the name of this enum constant
-     */
+     */ // 枚举元素的toString方法是打印当前枚举元素的名字
     public String toString() {
         return name;
     }
@@ -138,7 +138,7 @@ public abstract class Enum<E extends Enum<E>>
      * @param other the object to be compared for equality with this object.
      * @return  true if the specified object is equal to this
      *          enum constant.
-     */
+     */ // 判断给定的对象是否与当前元素相等, 这里业务上的相等就是内存上的相等, 必须严格是一个同一个枚举元素实例才相等
     public final boolean equals(Object other) {
         return this==other;
     }
@@ -147,7 +147,7 @@ public abstract class Enum<E extends Enum<E>>
      * Returns a hash code for this enum constant.
      *
      * @return a hash code for this enum constant.
-     */
+     */ // 返回当前枚举元素的hashCode, 使用Object中的hashCode方法实现
     public final int hashCode() {
         return super.hashCode();
     }
@@ -158,7 +158,7 @@ public abstract class Enum<E extends Enum<E>>
      * status.
      *
      * @return (never returns)
-     */
+     */ // 枚举元素是独一无二的, 不支持克隆, 所以调用clone方法会抛出不支持异常
     protected final Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
@@ -171,14 +171,14 @@ public abstract class Enum<E extends Enum<E>>
      * Enum constants are only comparable to other enum constants of the
      * same enum type.  The natural order implemented by this
      * method is the order in which the constants are declared.
-     */
+     */ // 枚举元素默认的比较大小方法是以元素的序号作为依据
     public final int compareTo(E o) {
-        Enum<?> other = (Enum<?>)o;
+        Enum<?> other = (Enum<?>)o; //
         Enum<E> self = this;
-        if (self.getClass() != other.getClass() && // optimization
-            self.getDeclaringClass() != other.getDeclaringClass())
-            throw new ClassCastException();
-        return self.ordinal - other.ordinal;
+        if (self.getClass() != other.getClass() && // optimization 优化判断效率, 如果getClass直接相等, 那么直接执行比较逻辑
+            self.getDeclaringClass() != other.getDeclaringClass()) // 如果getClass不相等, 那还要判断其superClass是不是Enum.class, 不是的话是否相等(内部类的情况)
+            throw new ClassCastException(); // 如果两个元素考虑了内部类的情况也的确不相等, 那么直接抛出类型转换异常
+        return self.ordinal - other.ordinal; // 如果两个枚举元素类型相等, 那么根据枚举元素序号执行比较逻辑
     }
 
     /**
@@ -192,12 +192,12 @@ public abstract class Enum<E extends Enum<E>>
      *
      * @return the Class object corresponding to this enum constant's
      *     enum type
-     */
+     */ // 获得当前枚举实例的真实枚举类型, 考虑了枚举元素可能是当前枚举类型内部类的情况
     @SuppressWarnings("unchecked")
     public final Class<E> getDeclaringClass() {
-        Class<?> clazz = getClass();
-        Class<?> zuper = clazz.getSuperclass();
-        return (zuper == Enum.class) ? (Class<E>)clazz : (Class<E>)zuper;
+        Class<?> clazz = getClass(); // 获得当前枚举类型
+        Class<?> zuper = clazz.getSuperclass(); // 获得类型的父类型
+        return (zuper == Enum.class) ? (Class<E>)clazz : (Class<E>)zuper; // 如果父类型是当前Enum.class, 那么不涉及内部类, 返回claszz即可. 否则内部类是Name$1, Name$2这种情况返回枚举元素真实类型zsuper
     }
 
     /**
@@ -226,16 +226,16 @@ public abstract class Enum<E extends Enum<E>>
      * @throws NullPointerException if {@code enumType} or {@code name}
      *         is null
      * @since 1.5
-     */
+     */ // 根据给定的枚举类型与标识符名称获得对应的实例
     public static <T extends Enum<T>> T valueOf(Class<T> enumType,
                                                 String name) {
-        T result = enumType.enumConstantDirectory().get(name);
-        if (result != null)
-            return result;
-        if (name == null)
+        T result = enumType.enumConstantDirectory().get(name); // 先是获得到了name-enum实例的Map, 然后通过Name获得到对应的枚举实例
+        if (result != null) // 如果根据name获取到对应的枚举实例
+            return result; // 返回此实例
+        if (name == null) // 判断指定的标识符名字不能为空
             throw new NullPointerException("Name is null");
         throw new IllegalArgumentException(
-            "No enum constant " + enumType.getCanonicalName() + "." + name);
+            "No enum constant " + enumType.getCanonicalName() + "." + name); // 根据name获取不到对应的枚举实例抛出异常
     }
 
     /**
@@ -245,12 +245,12 @@ public abstract class Enum<E extends Enum<E>>
 
     /**
      * prevent default deserialization
-     */
+     */ // 枚举类不能从输入流序列化
     private void readObject(ObjectInputStream in) throws IOException,
         ClassNotFoundException {
         throw new InvalidObjectException("can't deserialize enum");
     }
-
+    // 枚举类不能从输入流序列化
     private void readObjectNoData() throws ObjectStreamException {
         throw new InvalidObjectException("can't deserialize enum");
     }
