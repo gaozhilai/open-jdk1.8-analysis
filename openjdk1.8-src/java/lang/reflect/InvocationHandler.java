@@ -37,8 +37,8 @@ package java.lang.reflect;
  * @author      Peter Jones
  * @see         Proxy
  * @since       1.3
- */
-public interface InvocationHandler {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/9/11 18:10
+public interface InvocationHandler { /** 代理类方法拦截器, 创建代理类实例时传入此接口的实现, 当调用代理类方法时会分发成调用此接口实例的{@link #invoke(Object, Method, Object[])}方法 */
 
     /**
      * Processes a method invocation on a proxy instance and returns
@@ -89,7 +89,7 @@ public interface InvocationHandler {
      * method invocation on the proxy instance.
      *
      * @see     UndeclaredThrowableException
-     */
+     */ // 参数proxy是调用方法所属代理类实例, method是被调用的方法, args是调用方法时传递的参数
     public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable;
 }
