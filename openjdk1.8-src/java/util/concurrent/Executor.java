@@ -124,8 +124,8 @@ package java.util.concurrent;
  *
  * @since 1.5
  * @author Doug Lea
- */
-public interface Executor {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/9/15 9:54
+public interface Executor { // 执行器接口, 此接口提供了执行Runnable任务的能力
 
     /**
      * Executes the given command at some time in the future.  The command
@@ -136,6 +136,6 @@ public interface Executor {
      * @throws RejectedExecutionException if this task cannot be
      * accepted for execution
      * @throws NullPointerException if command is null
-     */
+     */ // 执行给定的Runnable任务
     void execute(Runnable command);
 }

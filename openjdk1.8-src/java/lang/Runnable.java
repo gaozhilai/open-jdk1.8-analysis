@@ -51,9 +51,9 @@ package java.lang;
  * @see     java.lang.Thread
  * @see     java.util.concurrent.Callable
  * @since   JDK1.0
- */
-@FunctionalInterface
-public interface Runnable {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/9/15 14:04
+@FunctionalInterface // Runnable是函数式接口, 支持lambda语法
+public interface Runnable { // 此接口是为了给想要通过线程来执行任务的对象一个通用接口, 即都通过实现run方法来执行想要线程执行的任务
     /**
      * When an object implementing interface <code>Runnable</code> is used
      * to create a thread, starting the thread causes the object's
@@ -64,6 +64,6 @@ public interface Runnable {
      * take any action whatsoever.
      *
      * @see     java.lang.Thread#run()
-     */
+     */ // 想要被线程执行的具体任务
     public abstract void run();
 }

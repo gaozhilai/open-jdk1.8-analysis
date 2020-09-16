@@ -57,8 +57,8 @@ package java.util.concurrent;
  * <a href="package-summary.html#MemoryVisibility"><i>happen-before</i></a>
  * actions taken by that task, which in turn <i>happen-before</i>
  * actions following a successful return from the corresponding {@code take()}.
- */
-public interface CompletionService<V> {
+ */ // 由 GaoZhilai 进行分析注释, 不正确的地方敬请斧正, 希望帮助大家节省阅读源代码的时间 2020/9/16 16:20
+public interface CompletionService<V> { // 此方法主要是将任务的执行与产生的结果解耦, 相当于一个阻塞队列, 队列里装的就是任务执行完毕后产生的结果
     /**
      * Submits a value-returning task for execution and returns a Future
      * representing the pending results of the task.  Upon completion,
@@ -69,7 +69,7 @@ public interface CompletionService<V> {
      * @throws RejectedExecutionException if the task cannot be
      *         scheduled for execution
      * @throws NullPointerException if the task is null
-     */
+     */ // 提交执行一个任务, 得到一个异步结果
     Future<V> submit(Callable<V> task);
 
     /**
@@ -85,7 +85,7 @@ public interface CompletionService<V> {
      * @throws RejectedExecutionException if the task cannot be
      *         scheduled for execution
      * @throws NullPointerException if the task is null
-     */
+     */ // 提交执行一个任务, 得到一个异步结果, 异步结果中包含的是调用时给定的对象
     Future<V> submit(Runnable task, V result);
 
     /**
@@ -94,7 +94,7 @@ public interface CompletionService<V> {
      *
      * @return the Future representing the next completed task
      * @throws InterruptedException if interrupted while waiting
-     */
+     */ // 如果存在执行完毕的任务, 那么获取一个对应的结果, 如果不存在, 就阻塞等待有任务执行完毕
     Future<V> take() throws InterruptedException;
 
     /**
@@ -103,7 +103,7 @@ public interface CompletionService<V> {
      *
      * @return the Future representing the next completed task, or
      *         {@code null} if none are present
-     */
+     */ // 获得任务完成的结果, 如果不存在直接返回null
     Future<V> poll();
 
     /**
@@ -119,6 +119,6 @@ public interface CompletionService<V> {
      *         {@code null} if the specified waiting time elapses
      *         before one is present
      * @throws InterruptedException if interrupted while waiting
-     */
+     */ // 获得任务完成的结果, 不存在则等待一段时间, 如果等待指定时间后, 还是不存在直接返回null
     Future<V> poll(long timeout, TimeUnit unit) throws InterruptedException;
 }
